@@ -481,6 +481,44 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		}
 
 
+		/* Deal Pipelines. */
+
+
+		/**
+		 * get_deal_pipelines function.
+		 *
+		 * @access public
+		 * @param mixed $pipeline_id
+		 * @return void
+		 */
+		function get_deal_pipelines( $pipeline_id ) {
+
+		}
+
+		/**
+		 * get_all_deal_pipelines function.
+		 *
+		 * @access public
+		 * @return void
+		 */
+		function get_all_deal_pipelines() {
+
+		}
+
+		function add_deal_pipeline() {
+
+		}
+
+		function update_deal_pipeline() {
+
+		}
+
+		function delete_deal_pipeline() {
+
+		}
+
+		/* Deal Properties. */
+
 		/* Timeline. */
 
 		/**
