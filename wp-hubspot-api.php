@@ -437,6 +437,49 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			return $this->fetch( $request );
 		}
 
+		/* Deals. */
+
+
+		/**
+		 * add_deal function.
+		 *
+		 * @access public
+		 * @param mixed $deal_json
+		 * @return void
+		 */
+		function add_deal( $deal_json ) {
+
+		}
+
+		/**
+		 * update_deal function.
+		 *
+		 * @access public
+		 * @param mixed $deal_id
+		 * @param mixed $deal_json
+		 * @return void
+		 */
+		function update_deal( $deal_id, $deal_json ) {
+
+		}
+
+		/**
+		 * Get all deals.
+		 * Docs: https://developers.hubspot.com/docs/methods/deals/get-all-deals
+		 *
+		 * @access public
+		 * @param mixed $limiit (default: null)
+		 * @param mixed $offset (default: null)
+		 * @param mixed $properties (default: null)
+		 * @param mixed $properties_with_history (default: null)
+		 * @param mixed $associations
+		 * @return void
+		 */
+		function get_all_deals( $limiit = null, $offset = null, $properties = null, $properties_with_history = null, $associations ){
+			$request = $this->base_uri . '/deals/v1/deal/paged?hapikey=' . static::$api_key;
+			return $this->fetch( $request );
+		}
+
 
 		/* Timeline. */
 
@@ -455,6 +498,38 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			$request = $this->base_uri . '/integrations/v1/'.$app_id.'/timeline/event-types?hapikey=' . static::$api_key;
 			return $this->fetch( $request );
 		}
+
+
+		/* Transactional. */
+
+
+		/**
+		 * List SMTP API Tokens.
+		 *
+		 * @access public
+		 * @return void
+		 */
+		function get_smtp_tokens() {
+			$request = $this->base_uri . '/email/public/v1/smtpapi/tokens?hapikey=' . static::$api_key;
+			return $this->fetch( $request );
+		}
+
+		/**
+		 * add_smtp_token function.
+		 *
+		 * @access public
+		 * @param mixed $createdby
+		 * @param mixed $campaign_name
+		 * @return void
+		 */
+		function add_smtp_token( $createdby, $campaign_name ) {
+			$request = $this->base_uri . '/email/public/v1/smtpapi/tokens?hapikey=' . static::$api_key;
+			return $this->fetch( $request );
+		}
+
+		/* Workflows. */
+
+		/* Webhooks. */
 
 	}
 
