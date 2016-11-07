@@ -74,9 +74,12 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 
 			static::$api_key = $api_key;
 
+			$this->args['headers'] = array(
+            'Content-Type' => 'application/json',
+	        );
+
 			if ( ! empty( $oauth_token ) ) {
 				$this->args['headers'] = array(
-					'Content-Type' => 'application/json',
 					'Authorization' => 'Bearer '. $oauth_token,
 				);
 			}
@@ -94,8 +97,6 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 
 			$response = wp_remote_request( $request, $this->args );
 
-			var_dump($response);
-
 			$code = wp_remote_retrieve_response_code($response );
 			if ( 200 !== $code ) {
 				return new WP_Error( 'response-error', sprintf( __( 'Server response code: %d', 'text-domain' ), $code ) );
@@ -106,9 +107,6 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 
 		/* Oauth. */
 
-		authorize() {
-			// https://app.hubspot.com/oauth/authorize
-		}
 
 		/* Calendar. */
 
@@ -377,6 +375,86 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		}
 
 		/* Companies Properties. */
+
+
+
+		/* Events. */
+
+		/**
+		 * event function.
+		 *
+		 * @access public
+		 * @param mixed $event_id
+		 * @param mixed $contact_email (default: null)
+		 * @param mixed $contact_revenue (default: null)
+		 * @param mixed $any_contact_property (default: null)
+		 * @return void
+		 */
+		function event( $event_id, $contact_email = null, $contact_revenue = null, $any_contact_property = null ) {
+
+		}
+
+		/* Keywords. */
+
+
+		/**
+		 * get_keyword_list function.
+		 *
+		 * @access public
+		 * @param mixed $search
+		 * @return void
+		 */
+		function get_keyword_list( $search ) {
+			$request = $this->base_uri . '/keywords/v1/keywords?hapikey=' . static::$api_key;
+			return $this->fetch( $request );
+		}
+
+		/**
+		 * get_keyword function.
+		 *
+		 * @access public
+		 * @param mixed $keyword_guid
+		 * @return void
+		 */
+		function get_keyword( $keyword_guid ) {
+			$request = $this->base_uri . '/keywords/v1/keywords/'.$keyword_guid.'?hapikey=' . static::$api_key;
+			return $this->fetch( $request );
+		}
+
+		function add_keyword() {
+
+		}
+
+		/**
+		 * delete_keyword function.
+		 *
+		 * @access public
+		 * @param mixed $keyword_guid
+		 * @return void
+		 */
+		function delete_keyword( $keyword_guid ) {
+			$request = $this->base_uri . '/keywords/v1/keywords/'.$keyword_guid.'?hapikey=' . static::$api_key;
+			return $this->fetch( $request );
+		}
+
+
+		/* Timeline. */
+
+		/**
+		 * Create a new Timeline Event Type
+		 *
+		 * @access public
+		 * @param mixed $app_id
+		 * @param mixed $name
+		 * @param mixed $header_template (default: null)
+		 * @param mixed $detail_template (default: null)
+		 * @param mixed $object_type (default: null)
+		 * @return void
+		 */
+		function create_timeline_event_type( $app_id, $name, $header_template = null, $detail_template = null, $object_type = null ) {
+			$request = $this->base_uri . '/integrations/v1/'.$app_id.'/timeline/event-types?hapikey=' . static::$api_key;
+			return $this->fetch( $request );
+		}
 
 	}
 
