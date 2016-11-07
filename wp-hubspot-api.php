@@ -76,6 +76,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 
 			if ( ! empty( $oauth_token ) ) {
 				$this->args['headers'] = array(
+					'Content-Type' => 'application/json',
 					'Authorization' => 'Bearer '. $oauth_token,
 				);
 			}
@@ -220,50 +221,159 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 
 		/* Companies. */
 
+
+		/**
+		 * get_companies function.
+		 *
+		 * @access public
+		 * @param string $limit (default: '')
+		 * @param string $offset (default: '')
+		 * @param string $properties (default: '')
+		 * @return void
+		 */
 		function get_companies( $limit = '', $offset = '', $properties = '' ) {
-
+			$request = $this->base_uri . '/companies/v2/companies/paged?hapikey=' . static::$api_key;
+			return $this->fetch( $request );
 		}
 
+		/**
+		 * get_recently_modified_companies function.
+		 *
+		 * @access public
+		 * @param string $offset (default: '')
+		 * @param string $count (default: '')
+		 * @return void
+		 */
 		function get_recently_modified_companies( $offset = '', $count = '' ) {
-
+			$request = $this->base_uri . '/companies/v2/companies/recent/modified?hapikey=' . static::$api_key;
+			return $this->fetch( $request );
 		}
 
+		/**
+		 * get_recently_created_companies function.
+		 *
+		 * @access public
+		 * @param string $offset (default: '')
+		 * @param string $count (default: '')
+		 * @return void
+		 */
 		function get_recently_created_companies( $offset = '', $count = '' ) {
-
+			$request = $this->base_uri . '/companies/v2/companies/recent/created?hapikey=' . static::$api_key;
+			return $this->fetch( $request );
 		}
 
+		/**
+		 * get_company_by_domain function.
+		 *
+		 * @access public
+		 * @param mixed $domain
+		 * @return void
+		 */
 		function get_company_by_domain( $domain ) {
-
+			$request = $this->base_uri . '/companies/v2/companies/domain/'.$domain.'?hapikey=' . static::$api_key;
+			return $this->fetch( $request );
 		}
 
+		/**
+		 * get_company function.
+		 *
+		 * @access public
+		 * @param mixed $company_id
+		 * @return void
+		 */
 		function get_company( $company_id ) {
-
+			$request = $this->base_uri . '/companies/v2/companies/'.$company_id.'?hapikey=' . static::$api_key;
+			return $this->fetch( $request );
 		}
 
+		/**
+		 * get_company_contacts function.
+		 *
+		 * @access public
+		 * @param mixed $company_id
+		 * @param string $vidoffset (default: '')
+		 * @param string $count (default: '')
+		 * @return void
+		 */
 		function get_company_contacts( $company_id, $vidoffset = '', $count = '' ) {
-
+			$request = $this->base_uri . '/companies/v2/companies/'.$company_id.'/contacts?hapikey=' . static::$api_key;
+			return $this->fetch( $request );
 		}
 
+		/**
+		 * get_company_contacts_ids function.
+		 *
+		 * @access public
+		 * @param mixed $company_id
+		 * @param string $vidoffset (default: '')
+		 * @param string $count (default: '')
+		 * @return void
+		 */
 		function get_company_contacts_ids( $company_id, $vidoffset = '', $count = '' ) {
-
+			$request = $this->base_uri . '/companies/v2/companies/'.$company_id.'/vids?hapikey=' . static::$api_key;
+			return $this->fetch( $request );
 		}
 
+
+		/**
+		 * add_company function.
+		 *
+		 * @access public
+		 * @return void
+		 */
 		function add_company() {
-
+			$request = $this->base_uri . '/companies/v2/companies?hapikey=' . static::$api_key;
+			return $this->fetch( $request );
 		}
 
+		/**
+		 * add_contact_to_company function.
+		 *
+		 * @access public
+		 * @param mixed $company_id
+		 * @param mixed $contact_vid
+		 * @return void
+		 */
 		function add_contact_to_company( $company_id, $contact_vid ) {
-
+			$request = $this->base_uri . '/engagements/v1/engagements/'.$company_id.'/associations/contact/'. $contact_vid .'?hapikey=' . static::$api_key;
+			return $this->fetch( $request );
 		}
 
+		/**
+		 * update_company function.
+		 *
+		 * @access public
+		 * @param mixed $company_id
+		 * @return void
+		 */
 		function update_company( $company_id ) {
+			$request = $this->base_uri . '/companies/v2/companies/'.$company_id.'?hapikey=' . static::$api_key;
+			return $this->fetch( $request );
 		}
 
+		/**
+		 * delete_company function.
+		 *
+		 * @access public
+		 * @param mixed $company_id
+		 * @return void
+		 */
 		function delete_company( $company_id ) {
+			$request = $this->base_uri . '/companies/v2/companies/'.$company_id.'?hapikey=' . static::$api_key;
+			return $this->fetch( $request );
 		}
 
+		/**
+		 * remove_contact_from_company function.
+		 *
+		 * @access public
+		 * @param mixed $company_id
+		 * @param mixed $contact_vid
+		 * @return void
+		 */
 		function remove_contact_from_company( $company_id, $contact_vid ) {
-
+			$request = $this->base_uri . '/companies/v2/companies/'. $company_id .'/contacts/'.$contact_vid.'?hapikey=' . static::$api_key;
+			return $this->fetch( $request );
 		}
 
 		/* Companies Properties. */
