@@ -376,6 +376,56 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 
 		/* Companies Properties. */
 
+		/* Contacts. */
+
+
+		/**
+		 * Create Contact.
+		 *
+		 * @access public
+		 * @return void
+		 */
+		function create_contact( ) {
+			$request = $this->base_uri . '/contacts/v1/contact/?hapikey=' . static::$api_key;
+			return $this->fetch( $request );
+		}
+
+
+		/**
+		 * Update Contact.
+		 *
+		 * @access public
+		 * @param mixed $contact_id
+		 * @return void
+		 */
+		function update_contact( $contact_id ) {
+			$request = $this->base_uri . '/contacts/v1/contact/vid/'. $contact_id .'/profile?hapikey=' . static::$api_key;
+			return $this->fetch( $request );
+		}
+
+
+		/**
+		 * Create or Update Contact.
+		 *
+		 * @access public
+		 * @param mixed $email
+		 * @return void
+		 */
+		function create_or_update_contact( $email ) {
+			$request = $this->base_uri . '/contacts/v1/contact/createOrUpdate/email/' . $email . '/?hapikey=' . static::$api_key;
+			return $this->fetch( $request );
+		}
+
+		/**
+		 * Create or Update Batch Contacts.
+		 *
+		 * @access public
+		 * @return void
+		 */
+		function create_or_update_batch_contacts() {
+			$request = $this->base_uri . '/contacts/v1/contact/batch/?hapikey=' . static::$api_key;
+			return $this->fetch( $request );
+		}
 
 
 		/* Events. */
