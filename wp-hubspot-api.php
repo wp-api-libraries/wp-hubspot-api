@@ -385,7 +385,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @access public
 		 * @return void
 		 */
-		function create_contact( ) {
+		function create_contact() {
 			$request = $this->base_uri . '/contacts/v1/contact/?hapikey=' . static::$api_key;
 			return $this->fetch( $request );
 		}
