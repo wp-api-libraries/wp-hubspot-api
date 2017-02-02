@@ -751,6 +751,10 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			return $this->fetch( $request );
 		}
 
+		function reset_smtp_api_token( $user_name ) {
+
+		}
+
 		/* Workflows. */
 
 		/* Webhooks. */
