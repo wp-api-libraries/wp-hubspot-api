@@ -653,6 +653,22 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 
 		}
 
+		function update_deal_property_group() {
+
+		}
+
+		function delete_deal_property_group() {
+
+		}
+
+		function get_deal_property_groups() {
+
+		}
+
+		function get_deal_property_group() {
+
+		}
+
 		/* Timeline. */
 
 		/**
