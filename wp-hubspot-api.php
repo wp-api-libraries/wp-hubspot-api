@@ -559,6 +559,12 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			return $this->fetch( $request );
 		}
 
+		/* Owners. */
+
+		function get_owners() {
+
+		}
+
 		/* Deals. */
 
 
