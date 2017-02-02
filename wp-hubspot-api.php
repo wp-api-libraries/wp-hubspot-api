@@ -629,6 +629,30 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 
 		/* Deal Properties. */
 
+		function add_deal_property() {
+
+		}
+
+		function update_deal_property() {
+
+		}
+
+		function delete_deal_property() {
+
+		}
+
+		function get_all_deal_properties() {
+
+		}
+
+		function get_deal_property() {
+
+		}
+
+		function add_deal_property_group() {
+
+		}
+
 		/* Timeline. */
 
 		/**
