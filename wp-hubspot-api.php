@@ -671,6 +671,42 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 
 		/* Timeline. */
 
+		function add_or_update_timeline_event() {
+
+		}
+
+		function get_timeline_event_types() {
+
+		}
+
+		function add_new_timeline_event_type() {
+
+		}
+
+		function update_timeline_event_type() {
+
+		}
+
+		function delete_timeline_event_type() {
+
+		}
+
+		function get_properties_for_timeline_event_type() {
+
+		}
+
+		function add_property_for_timeline_event_type() {
+
+		}
+
+		function update_property_for_timeline_event_type() {
+
+		}
+
+		function delete_property_for_timeline_event_type() {
+
+		}
+
 		/**
 		 * Create a new Timeline Event Type
 		 *
