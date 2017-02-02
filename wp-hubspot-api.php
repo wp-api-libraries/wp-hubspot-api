@@ -594,26 +594,6 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 
 		/* Deal Pipelines. */
 
-		function get_all_deal_pipelines() {
-
-		}
-
-		function get_deal_pipeline() {
-
-		}
-
-		function add_deal_pipeline() {
-
-		}
-
-		function update_deal_pipeline() {
-
-		}
-
-		function delete_deal_pipeline() {
-
-		}
-
 		/**
 		 * get_deal_pipelines function.
 		 *
