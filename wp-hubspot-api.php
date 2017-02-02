@@ -376,6 +376,42 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 
 		/* Companies Properties. */
 
+		function add_company_property() {
+
+		}
+
+		function update_company_property() {
+
+		}
+
+		function delete_company_property() {
+
+		}
+
+		function get_all_company_properties() {
+
+		}
+
+		function get_company_property() {
+
+		}
+
+		function add_company_property_group() {
+
+		}
+
+		function update_company_property_group() {
+
+		}
+
+		function delete_company_property_group() {
+
+		}
+
+		function get_company_property_groups() {
+
+		}
+
 		/* Contacts. */
 
 
@@ -460,7 +496,11 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			// https://api.hubapi.com/contacts/v1/contact/merge-vids/1343724/?hapikey=demo
 		}
 
-		/* Events. */
+		/* Contact Lists. */
+
+		/* Content Properties. */
+
+		/* Email Events. */
 
 		/**
 		 * event function.
