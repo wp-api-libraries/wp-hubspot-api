@@ -545,6 +545,10 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 
 		}
 
+		function get_deal() {
+			// 'https://api.hubapi.com/deals/v1/deal/3865198?hapikey=demo'
+		}
+
 		/**
 		 * Get all deals.
 		 * Docs: https://developers.hubspot.com/docs/methods/deals/get-all-deals
@@ -570,8 +574,45 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			// https://api.hubapi.com/deals/v1/deal/recent/created?hapikey=demo'
 		}
 
+		function delete_deal() {
+			// Example URL: 'https://api.hubapi.com/deals/v1/deal/10444744?hapikey=demo'
+		}
+
+		function associate_deal() {
+			// 'https://api.hubapi.com/deals/v1/deal/1126609/associations/CONTACT?id=394455&hapikey=demo'
+		}
+
+		function delete_deal_association() {
+			// 'https://api.hubapi.com/deals/v1/deal/1126609/associations/CONTACT?id=394455&hapikey=demo'
+
+		}
+
+		function get_associated_deals() {
+			// https://api.hubapi.com/deals/v1/deal/associated/contact/1002325/paged?hapikey=demo&includeAssociations=true&limit=10&properties=dealname
+
+		}
+
 		/* Deal Pipelines. */
 
+		function get_all_deal_pipelines() {
+
+		}
+
+		function get_deal_pipeline() {
+
+		}
+
+		function add_deal_pipeline() {
+
+		}
+
+		function update_deal_pipeline() {
+
+		}
+
+		function delete_deal_pipeline() {
+
+		}
 
 		/**
 		 * get_deal_pipelines function.
