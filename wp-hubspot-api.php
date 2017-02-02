@@ -427,6 +427,38 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			return $this->fetch( $request );
 		}
 
+		function delete_contact() {
+			// https://api.hubapi.com/contacts/v1/contact/vid/61571?hapikey=demo
+
+		}
+
+		function get_all_contacts() {
+			// https://api.hubapi.com/contacts/v1/lists/all/contacts/all?hapikey=demo&count=2
+		}
+
+		function get_recent_contacts() {
+			// https://api.hubapi.com/contacts/v1/lists/recently_updated/contacts/recent?hapikey=demo&count=2
+
+		}
+
+		function get_contact_by_token( $contact_token ) {
+			// http://api.hubapi.com/contacts/v1/contact/utk/f844d2217850188692f2610c717c2e9b/profile?hapikey=demo
+
+		}
+
+		function get_batch_contacts_by_token() {
+			// https://api.hubapi.com/contacts/v1/contact/utks/batch/?utk=f844d2217850188692f2610c717c2e9b&utk=j94344d22178501692f2610c717c2e9b&hapikey=demo
+
+		}
+
+		function search_contacts( $search_query ) {
+			// https://api.hubapi.com/contacts/v1/search/query?q=testingapis&hapikey=demo
+
+		}
+
+		function merge_contacts( $contact_id, $vid_to_merge ) {
+			// https://api.hubapi.com/contacts/v1/contact/merge-vids/1343724/?hapikey=demo
+		}
 
 		/* Events. */
 
