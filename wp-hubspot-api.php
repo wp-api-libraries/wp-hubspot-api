@@ -562,6 +562,13 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			return $this->fetch( $request );
 		}
 
+		function get_recently_modified_deals() {
+			// https://api.hubapi.com/deals/v1/deal/recent/modified?hapikey=demo
+		}
+
+		function get_recent_created_deals() {
+			// https://api.hubapi.com/deals/v1/deal/recent/created?hapikey=demo'
+		}
 
 		/* Deal Pipelines. */
 
