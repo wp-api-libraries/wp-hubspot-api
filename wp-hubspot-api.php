@@ -421,11 +421,19 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @access public
 		 * @return void
 		 */
-		function create_contact() {
-			$request = $this->base_uri . '/contacts/v1/contact/?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
-		}
+		function create_contact( $args ) {
 
+			$response = wp_remote_post( $this->base_uri . '/contacts/v1/contact/?hapikey=' . static::$api_key, $args );
+
+			if ( is_wp_error( $response ) ) {
+				$error_message = $response->get_error_message();
+				echo "Something went wrong: $error_message";
+			} else {
+				echo 'Response:<pre>';
+				print_r( $response );
+				echo '</pre>';
+			}
+		}
 
 		/**
 		 * Update Contact.
