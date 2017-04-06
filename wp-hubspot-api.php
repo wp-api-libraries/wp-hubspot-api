@@ -222,12 +222,12 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 
 
 		/**
-		 * get_companies function.
+		 * Get Companies.
 		 *
 		 * @access public
-		 * @param string $limit (default: '')
-		 * @param string $offset (default: '')
-		 * @param string $properties (default: '')
+		 * @param string $limit (default: '') Limit.
+		 * @param string $offset (default: '') Offset.
+		 * @param string $properties (default: '') Properties.
 		 * @return void
 		 */
 		function get_companies( $limit = '', $offset = '', $properties = '' ) {
@@ -236,11 +236,11 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		}
 
 		/**
-		 * get_recently_modified_companies function.
+		 * Get Recently Modified Companies.
 		 *
 		 * @access public
-		 * @param string $offset (default: '')
-		 * @param string $count (default: '')
+		 * @param string $offset (default: '') Offset.
+		 * @param string $count (default: '') Count.
 		 * @return void
 		 */
 		function get_recently_modified_companies( $offset = '', $count = '' ) {
@@ -249,11 +249,11 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		}
 
 		/**
-		 * get_recently_created_companies function.
+		 * Get Recently Created Companies.
 		 *
 		 * @access public
-		 * @param string $offset (default: '')
-		 * @param string $count (default: '')
+		 * @param string $offset (default: '') Offset.
+		 * @param string $count (default: '') count.
 		 * @return void
 		 */
 		function get_recently_created_companies( $offset = '', $count = '' ) {
@@ -262,10 +262,10 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		}
 
 		/**
-		 * get_company_by_domain function.
+		 * Get company by Domain.
 		 *
 		 * @access public
-		 * @param mixed $domain
+		 * @param mixed $domain Domain.
 		 * @return void
 		 */
 		function get_company_by_domain( $domain ) {
@@ -274,10 +274,10 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		}
 
 		/**
-		 * get_company function.
+		 * Get Company.
 		 *
 		 * @access public
-		 * @param mixed $company_id
+		 * @param mixed $company_id Company ID.
 		 * @return void
 		 */
 		function get_company( $company_id ) {
@@ -286,12 +286,12 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		}
 
 		/**
-		 * get_company_contacts function.
+		 * Get Company Contacts.
 		 *
 		 * @access public
-		 * @param mixed $company_id
-		 * @param string $vidoffset (default: '')
-		 * @param string $count (default: '')
+		 * @param mixed $company_id Company ID.
+		 * @param string $vidoffset (default: '') Vid Offset.
+		 * @param string $count (default: '') Count.
 		 * @return void
 		 */
 		function get_company_contacts( $company_id, $vidoffset = '', $count = '' ) {
@@ -300,12 +300,12 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		}
 
 		/**
-		 * get_company_contacts_ids function.
+		 * Get Company Contacts IDs.
 		 *
 		 * @access public
-		 * @param mixed $company_id
-		 * @param string $vidoffset (default: '')
-		 * @param string $count (default: '')
+		 * @param mixed $company_id Company ID.
+		 * @param string $vidoffset (default: '') VidOffset.
+		 * @param string $count (default: '') Count.
 		 * @return void
 		 */
 		function get_company_contacts_ids( $company_id, $vidoffset = '', $count = '' ) {
@@ -315,7 +315,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 
 
 		/**
-		 * add_company function.
+		 * Add Company.
 		 *
 		 * @access public
 		 * @return void
@@ -326,11 +326,11 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		}
 
 		/**
-		 * add_contact_to_company function.
+		 * Add Contact to Company.
 		 *
 		 * @access public
-		 * @param mixed $company_id
-		 * @param mixed $contact_vid
+		 * @param mixed $company_id Company ID.
+		 * @param mixed $contact_vid Contact VID.
 		 * @return void
 		 */
 		function add_contact_to_company( $company_id, $contact_vid ) {
@@ -339,10 +339,10 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		}
 
 		/**
-		 * update_company function.
+		 * Update Company.
 		 *
 		 * @access public
-		 * @param mixed $company_id
+		 * @param mixed $company_id Company ID.
 		 * @return void
 		 */
 		function update_company( $company_id ) {
@@ -351,10 +351,10 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		}
 
 		/**
-		 * delete_company function.
+		 * Delete Company.
 		 *
 		 * @access public
-		 * @param mixed $company_id
+		 * @param mixed $company_id Company ID.
 		 * @return void
 		 */
 		function delete_company( $company_id ) {
@@ -363,11 +363,11 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		}
 
 		/**
-		 * remove_contact_from_company function.
+		 * Remove Contact from Company.
 		 *
 		 * @access public
-		 * @param mixed $company_id
-		 * @param mixed $contact_vid
+		 * @param mixed $company_id Company ID.
+		 * @param mixed $contact_vid Contact VID.
 		 * @return void
 		 */
 		function remove_contact_from_company( $company_id, $contact_vid ) {
@@ -512,13 +512,13 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		/* Email Events. */
 
 		/**
-		 * event function.
+		 * Event.
 		 *
 		 * @access public
-		 * @param mixed $event_id
-		 * @param mixed $contact_email (default: null)
-		 * @param mixed $contact_revenue (default: null)
-		 * @param mixed $any_contact_property (default: null)
+		 * @param mixed $event_id Event ID.
+		 * @param mixed $contact_email (default: null) Contact Email.
+		 * @param mixed $contact_revenue (default: null) Contact Revenue.
+		 * @param mixed $any_contact_property (default: null) Any Contact Property.
 		 * @return void
 		 */
 		function event( $event_id, $contact_email = null, $contact_revenue = null, $any_contact_property = null ) {
@@ -529,10 +529,10 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 
 
 		/**
-		 * get_keyword_list function.
+		 * Get Keyword list.
 		 *
 		 * @access public
-		 * @param mixed $search
+		 * @param mixed $search Search.
 		 * @return void
 		 */
 		function get_keyword_list( $search ) {
@@ -541,10 +541,10 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		}
 
 		/**
-		 * get_keyword function.
+		 * Get Keyword.
 		 *
 		 * @access public
-		 * @param mixed $keyword_guid
+		 * @param mixed $keyword_guid Keyword GUID.
 		 * @return void
 		 */
 		function get_keyword( $keyword_guid ) {
@@ -557,10 +557,10 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		}
 
 		/**
-		 * delete_keyword function.
+		 * Delete Keyword.
 		 *
 		 * @access public
-		 * @param mixed $keyword_guid
+		 * @param mixed $keyword_guid Keyword GUID.
 		 * @return void
 		 */
 		function delete_keyword( $keyword_guid ) {
@@ -578,10 +578,10 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 
 
 		/**
-		 * add_deal function.
+		 * Add Deal.
 		 *
 		 * @access public
-		 * @param mixed $deal_json
+		 * @param mixed $deal_json Deal JSON.
 		 * @return void
 		 */
 		function add_deal( $deal_json ) {
@@ -589,11 +589,11 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		}
 
 		/**
-		 * update_deal function.
+		 * Update Deal.
 		 *
 		 * @access public
-		 * @param mixed $deal_id
-		 * @param mixed $deal_json
+		 * @param mixed $deal_id Deal ID.
+		 * @param mixed $deal_json Deal JSON.
 		 * @return void
 		 */
 		function update_deal( $deal_id, $deal_json ) {
@@ -609,14 +609,14 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * Docs: https://developers.hubspot.com/docs/methods/deals/get-all-deals
 		 *
 		 * @access public
-		 * @param mixed $limiit (default: null)
-		 * @param mixed $offset (default: null)
-		 * @param mixed $properties (default: null)
-		 * @param mixed $properties_with_history (default: null)
-		 * @param mixed $associations
+		 * @param mixed $limit (default: null) Limit.
+		 * @param mixed $offset (default: null) Offset.
+		 * @param mixed $properties (default: null) Properties.
+		 * @param mixed $properties_with_history (default: null) Properties with History.
+		 * @param mixed $associations Associations.
 		 * @return void
 		 */
-		function get_all_deals( $limiit = null, $offset = null, $properties = null, $properties_with_history = null, $associations ){
+		function get_all_deals( $limit = null, $offset = null, $properties = null, $properties_with_history = null, $associations ){
 			$request = $this->base_uri . '/deals/v1/deal/paged?hapikey=' . static::$api_key;
 			return $this->fetch( $request );
 		}
@@ -650,10 +650,10 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		/* Deal Pipelines. */
 
 		/**
-		 * get_deal_pipelines function.
+		 * Get Deal Pipelines.
 		 *
 		 * @access public
-		 * @param mixed $pipeline_id
+		 * @param mixed $pipeline_id Pipeline ID.
 		 * @return void
 		 */
 		function get_deal_pipelines( $pipeline_id ) {
@@ -661,7 +661,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		}
 
 		/**
-		 * get_all_deal_pipelines function.
+		 * Get all Deal Pipelines.
 		 *
 		 * @access public
 		 * @return void
@@ -763,14 +763,14 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		}
 
 		/**
-		 * Create a new Timeline Event Type
+		 * Create a new Timeline Event Type.
 		 *
 		 * @access public
-		 * @param mixed $app_id
-		 * @param mixed $name
-		 * @param mixed $header_template (default: null)
-		 * @param mixed $detail_template (default: null)
-		 * @param mixed $object_type (default: null)
+		 * @param mixed $app_id APP ID.
+		 * @param mixed $name Name.
+		 * @param mixed $header_template (default: null) Header Template.
+		 * @param mixed $detail_template (default: null) Detail Template.
+		 * @param mixed $object_type (default: null) Object Type.
 		 * @return void
 		 */
 		function create_timeline_event_type( $app_id, $name, $header_template = null, $detail_template = null, $object_type = null ) {
@@ -794,11 +794,11 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		}
 
 		/**
-		 * add_smtp_token function.
+		 * Add SMTP Token.
 		 *
 		 * @access public
-		 * @param mixed $createdby
-		 * @param mixed $campaign_name
+		 * @param mixed $createdby Created By.
+		 * @param mixed $campaign_name Campaign Name.
 		 * @return void
 		 */
 		function add_smtp_token( $createdby, $campaign_name ) {
