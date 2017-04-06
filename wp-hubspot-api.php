@@ -14,6 +14,7 @@
 * Author URI: https://wp-api-libraries.com
 * GitHub Plugin URI: https://github.com/wp-api-libraries/wp-hubspot-api
 * GitHub Branch: master
+* Text Domain: wp-hubspot-api
 */
 
 /* Exit if accessed directly */
@@ -99,7 +100,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 
 			$code = wp_remote_retrieve_response_code($response );
 			if ( 200 !== $code ) {
-				return new WP_Error( 'response-error', sprintf( __( 'Server response code: %d', 'text-domain' ), $code ) );
+				return new WP_Error( 'response-error', sprintf( __( 'Server response code: %d', 'wp-hubspot-api' ), $code ) );
 			}
 			$body = wp_remote_retrieve_body( $response );
 			return json_decode( $body );
@@ -114,13 +115,13 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * Calendar - List content events.
 		 *
 		 * @access public
-		 * @param mixed $start_date
-		 * @param mixed $end_date
-		 * @param mixed $limit (default: null)
-		 * @param mixed $offset (default: null)
-		 * @param mixed $content_category (default: null)
-		 * @param mixed $campaign_guid (default: null)
-		 * @param mixed $include_no_campaigns (default: null)
+		 * @param mixed $start_date Start Date.
+		 * @param mixed $end_date End Date.
+		 * @param mixed $limit (default: null) Limit.
+		 * @param mixed $offset (default: null) Offset.
+		 * @param mixed $content_category (default: null) Content Category.
+		 * @param mixed $campaign_guid (default: null) Campaign GUID.
+		 * @param mixed $include_no_campaigns (default: null) Include No Compaigns.
 		 * @return void
 		 */
 		function get_content_events( $start_date, $end_date, $limit = null, $offset = null, $content_category = null, $campaign_guid = null, $include_no_campaigns = null ) {
@@ -130,15 +131,15 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		}
 
 		/**
-		 * get_social_events function.
+		 * Get Social Events.
 		 *
 		 * @access public
-		 * @param mixed $start_date
-		 * @param mixed $end_date
-		 * @param mixed $limit (default: null)
-		 * @param mixed $offset (default: null)
-		 * @param mixed $campaign_guid (default: null)
-		 * @param mixed $include_no_campaigns (default: null)
+		 * @param mixed $start_date Start Date.
+		 * @param mixed $end_date End Date.
+		 * @param mixed $limit (default: null) Limit.
+		 * @param mixed $offset (default: null) Offset.
+		 * @param mixed $campaign_guid (default: null) Campaign GUID.
+		 * @param mixed $include_no_campaigns (default: null) Include No Campaigns.
 		 * @return void
 		 */
 		function get_social_events( $start_date, $end_date, $limit = null, $offset = null, $campaign_guid = null, $include_no_campaigns = null ) {
@@ -152,12 +153,12 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * get_task_events function.
 		 *
 		 * @access public
-		 * @param mixed $start_date
-		 * @param mixed $end_date
-		 * @param mixed $limit (default: null)
-		 * @param mixed $offset (default: null)
-		 * @param mixed $campaign_guid (default: null)
-		 * @param mixed $include_no_campaigns (default: null)
+		 * @param mixed $start_date Start Date.
+		 * @param mixed $end_date End Date.
+		 * @param mixed $limit (default: null) Limit.
+		 * @param mixed $offset (default: null) Offset.
+		 * @param mixed $campaign_guid (default: null) Campaign GUID.
+		 * @param mixed $include_no_campaigns (default: null) Include No Campaigns.
 		 * @return void
 		 */
 		function get_task_events( $start_date, $end_date, $limit = null, $offset = null, $campaign_guid = null, $include_no_campaigns = null ) {
@@ -168,7 +169,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		}
 
 		/**
-		 * create_task function.
+		 * Create Task.
 		 *
 		 * @access public
 		 * @return void
@@ -180,10 +181,10 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		}
 
 		/**
-		 * get_task function.
+		 * Get Task.
 		 *
 		 * @access public
-		 * @param mixed $task_id
+		 * @param mixed $task_id Task ID.
 		 * @return void
 		 */
 		function get_task( $task_id ) {
@@ -194,10 +195,10 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		}
 
 		/**
-		 * update_task function.
+		 * Update Task.
 		 *
 		 * @access public
-		 * @param mixed $task_id
+		 * @param mixed $task_id Task ID.
 		 * @return void
 		 */
 		function update_task( $task_id ) {
@@ -206,10 +207,10 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		}
 
 		/**
-		 * delete_task function.
+		 * Delete Task.
 		 *
 		 * @access public
-		 * @param mixed $task_id
+		 * @param mixed $task_id Task ID.
 		 * @return void
 		 */
 		function delete_task( $task_id ) {
