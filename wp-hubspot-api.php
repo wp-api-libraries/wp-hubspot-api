@@ -121,7 +121,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			if ( ! empty( static::$api_key ) ) {
 				$this->route = add_query_arg( 'hapikey', static::$api_key, $this->route );
 			}
-
+			_error_log( $this->base_uri . $this->route );
 			// Make the request.
 			$response = wp_remote_request( $this->base_uri . $this->route, $this->args );
 
@@ -326,7 +326,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 				$args['propertiesWithHistory'] = $properties_with_history;
 			}
 
-			return $this->build_request( 'companies/v2/companies/paged' )->fetch();
+			return $this->build_request( 'companies/v2/companies/paged', $args )->fetch();
 		}
 
 		/**
