@@ -511,13 +511,22 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 
 
 		/**
-		 * Create Contact.
+		 * Create a new contact.
 		 *
-		 * @access public
-		 * @return void
+		 * Create a new contact in HubSpot with a simple HTTP POST to the Contacts API. The contact will be created
+		 * instantly inside of HubSpot, and will be assigned a unique ID (vid) that can be used to look up the contact
+		 * inside of HubSpot later.
+		 *
+		 * @api POST
+		 * @see https://developers.hubspot.com/docs/methods/contacts/create_contact Documentation
+		 * @param  array $properties  An array containing one or more user property array
+		 * @return array              New contact info.
 		 */
-		function create_contact( $args ) {
-			$response = wp_remote_post( $this->base_uri . '/contacts/v1/contact/?hapikey=' . static::$api_key, $args );
+		function create_contact( $properties ) {
+			$args = array(
+				'properties' => $properties
+			);
+			return $this->build_request( 'contacts/v1/contact', $args,  'POST' )->fetch();
 		}
 
 		/**
