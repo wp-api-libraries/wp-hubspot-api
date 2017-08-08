@@ -121,7 +121,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			if ( ! empty( static::$api_key ) ) {
 				$this->route = add_query_arg( 'hapikey', static::$api_key, $this->route );
 			}
-			_error_log( $this->base_uri . $this->route );
+
 			// Make the request.
 			$response = wp_remote_request( $this->base_uri . $this->route, $this->args );
 
