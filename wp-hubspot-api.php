@@ -483,8 +483,16 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 
 		}
 
+		/**
+		 * Get all Company Properties.
+		 *
+		 * Get all of the company properties, including their definition, for a given portal.
+		 * @api GET
+		 * @see https://developers.hubspot.com/docs/methods/companies/get_company_properties Documentation
+		 * @return array A list of company properties.
+		 */
 		function get_all_company_properties() {
-
+			return $this->build_request( 'properties/v1/companies/properties' )->fetch();
 		}
 
 		function get_company_property() {
