@@ -62,7 +62,14 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @var string
 		 * @access protected
 		 */
-		protected $base_uri = 'https://api.hubapi.com';
+		protected $base_uri = 'https://api.hubapi.com/';
+
+		/**
+		 * Route being called.
+		 *
+		 * @var string
+		 */
+		protected $route = '';
 
 		/**
 		 * __construct function.
@@ -71,39 +78,98 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @param mixed $api_key
 		 * @return void
 		 */
-		function __construct( $api_key, $oauth_token = null ) {
-
+		function __construct( $api_key = null, $oauth_token = null ) {
 			static::$api_key = $api_key;
+			static::$oauth_token = $oauth_token;
+		}
 
+		/**
+		 * Prepares API request.
+		 *
+		 * @param  string $route   API route to make the call to.
+		 * @param  array  $args    Arguments to pass into the API call.
+		 * @param  array  $method  HTTP Method to use for request.
+		 * @return self            Returns an instance of itself so it can be chained to the fetch method.
+		 */
+		protected function build_request( $route, $args = array(), $method = 'GET' ) {
+			// Start building query.
+			$this->set_headers();
+			$this->args['method'] = $method;
+			$this->route = $route;
+
+			// Generate query string for GET requests.
+			if ( 'GET' === $method ) {
+				$this->route = add_query_arg( array_filter( $args ), $route );
+			} elseif ( 'application/json' === $this->args['headers']['Content-Type'] ) {
+				$this->args['body'] = wp_json_encode( $args );
+			} else {
+				$this->args['body'] = $args;
+			}
+
+			return $this;
+		}
+
+
+		/**
+		 * Fetch the request from the API.
+		 *
+		 * @access private
+		 * @return array|WP_Error Request results or WP_Error on request failure.
+		 */
+		protected function fetch() {
+
+			if ( ! empty( static::$api_key ) ) {
+				$this->route = add_query_arg( 'hapikey', static::$api_key, $this->route );
+			}
+
+			// Make the request.
+			$response = wp_remote_request( $this->base_uri . $this->route, $this->args );
+
+			// Retrieve Status code & body.
+			$code = wp_remote_retrieve_response_code( $response );
+			$body = json_decode( wp_remote_retrieve_body( $response ) );
+
+			// Return WP_Error if request is not successful.
+			if ( ! $this->is_status_ok( $code ) ) {
+				return new WP_Error( 'response-error', sprintf( __( 'Status: %d', 'wp-hubspot-api' ), $code ), $body );
+			}
+			$this->clear();
+
+			return $body;
+		}
+
+		/**
+		 * Set request headers.
+		 */
+		protected function set_headers() {
+			// Set request headers.
 			$this->args['headers'] = array(
             'Content-Type' => 'application/json',
 	        );
 
-			if ( ! empty( $oauth_token ) ) {
+			if ( ! empty( static::$oauth_token ) ) {
 				$this->args['headers'] = array(
-					'Authorization' => 'Bearer '. $oauth_token,
+					'Authorization' => 'Bearer '. static::$oauth_token,
 				);
 			}
 
 		}
 
 		/**
-		 * Fetch the request from the API.
-		 *
-		 * @access private
-		 * @param mixed $request Request URL.
-		 * @return $body Body.
+		 * Clear query data.
 		 */
-		private function fetch( $request ) {
+		protected function clear() {
+			$this->args = array();
+		}
 
-			$response = wp_remote_request( $request, $this->args );
-
-			$code = wp_remote_retrieve_response_code($response );
-			if ( 200 !== $code ) {
-				return new WP_Error( 'response-error', sprintf( __( 'Server response code: %d', 'wp-hubspot-api' ), $code ) );
-			}
-			$body = wp_remote_retrieve_body( $response );
-			return json_decode( $body );
+		/**
+		 * Check if HTTP status code is a success.
+		 *
+		 * @param  int $code HTTP status code.
+		 * @return boolean       True if status is within valid range.
+		 */
+		protected function is_status_ok( $code ) {
+			return ( 200 <= $code && 300 > $code );
 		}
 
 		/* Oauth. */
@@ -225,14 +291,42 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * Get Companies.
 		 *
 		 * @access public
-		 * @param string $limit (default: '') Limit.
-		 * @param string $offset (default: '') Offset.
-		 * @param string $properties (default: '') Properties.
+		 * @param string $limit                   The number of records to return. Defaults to 100, has a maximum value of 250.
+		 * @param string $offset                  Used to page through the results. If there are more records in your portal
+		 *                                        than the limit= parameter, you will need to use the offset returned in the
+		 *                                        first request to get the next set of results.
+		 * @param string $properties              Used to include specific company properties in the results.  By default,
+		 *                                        the results will only include the company ID, and will not include the
+		 *                                        values for any properties for your companies.  Including this parameter
+		 *                                        will include the data for the specified property in the results.  You can
+		 *                                        include this parameter multiple times to request multiple properties.
+		 *                                        Note: Companies that do not have a value set for a property will not
+		 *                                        include that property, even when you specify the property. A company
+		 *                                        without a value for the website property would not show the website
+		 *                                        property in the results, even with &properties=website in the URL.
+		 * @param string $properties_with_history Works similarly to properties=, but this parameter will include the
+		 *                                        history for the specified property, instead of just including the current
+		 *                                        value. Use this parameter when you need the full history of changes to a
+		 *                                        property's value.
 		 * @return void
 		 */
-		function get_companies( $limit = '', $offset = '', $properties = '' ) {
-			$request = $this->base_uri . '/companies/v2/companies/paged?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+		function get_companies( int $limit = null, int $offset = null, $properties = null, $properties_with_history = null ) {
+			$args = array();
+
+			if( null !== $limit ){
+				$args['limit'] = $limit;
+			}
+			if( null !== $offset ){
+				$args['offset'] = $offset;
+			}
+			if( null !== $properties ){
+				$args['properties'] = $properties;
+			}
+			if( null !== $properties_with_history ){
+				$args['propertiesWithHistory'] = $properties_with_history;
+			}
+
+			return $this->build_request( 'companies/v2/companies/paged' )->fetch();
 		}
 
 		/**
@@ -423,17 +517,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function create_contact( $args ) {
-
 			$response = wp_remote_post( $this->base_uri . '/contacts/v1/contact/?hapikey=' . static::$api_key, $args );
-
-			if ( is_wp_error( $response ) ) {
-				$error_message = $response->get_error_message();
-				echo "Something went wrong: $error_message";
-			} else {
-				echo 'Response:<pre>';
-				print_r( $response );
-				echo '</pre>';
-			}
 		}
 
 		/**
