@@ -570,8 +570,66 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 
 		}
 
-		function get_all_contacts() {
-			// https://api.hubapi.com/contacts/v1/lists/all/contacts/all?hapikey=demo&count=2
+    /**
+     * Get all contacts
+     *
+     * For a given portal, return all contacts that have been created in the portal.
+     *
+     * A paginated list of contacts will be returned to you, with a maximum of 100 contacts per page.
+     *
+     * Please Note There are 2 fields here to pay close attention to: the "has-more" field that will let you know
+     * whether there are more contacts that you can pull from this portal, and the "vid-offset" field which will let
+     * you know where you are in the list of contacts. You can then use the "vid-offset" field in the "vidOffset"
+     * parameter described below.
+     *
+     * @api GET
+     * @see https://developers.hubspot.com/docs/methods/contacts/get_contacts Documentation
+     *
+     * @param  int    $count            This parameter lets you specify the amount of contacts to return in your API
+     *                                  call. The default for this parameter (if it isn't specified) is 20 contacts.
+     *                                  The maximum amount of contacts you can have returned to you via this parameter
+     *                                  is 100.
+     * @param  int    $contact_offset   Used to page through the contacts. Every call to this endpoint will return a
+     *                                  vid-offset value. This value is used in the vidOffset parameter of the next
+     *                                  call to get the next page of contacts.
+     * @param  string $property         By default, only a few standard properties will be included in the response
+     *                                  data. If you include the 'property' parameter, then you will instead get the
+     *                                  specified property in the response. This parameter may be included multiple
+     *                                  times to specify multiple properties. NOTE: Contacts only store data for
+     *                                  properties with a value, so records with no value for a property will not
+     *                                  include that property, even if the property is specified in the request URL.
+     * @param  string $property_mode    One of “value_only” or “value_and_history” to specify if the current value for a
+     *                                  property should be fetched, or the value and all the historical values for that
+     *                                  property. Default is “value_only”.
+     * @param  string $form_submit_mode One of “all”, “none”, “newest”, “oldest” to specify which form submissions
+     *                                  should be fetched. Default is “newest”.
+     * @param  bool   $list_memberships Boolean "true" or "false" to indicate whether current list memberships should be
+     *                                  fetched for the contact. Default is false.
+     * @return array                    Array of contact info.
+     */
+		function get_all_contacts( int $count = null, int $contact_offset = null, string $property = null, string $property_mode = null, string $form_submit_mode = null, bool $list_memberships = null ) {
+			$args = array();
+
+			if( null !== $count ){
+				$args['count'] = $count;
+			}
+			if( null !== $contact_offset ){
+				$args['vidOffset'] = $contact_offset;
+			}
+			if( null !== $property ){
+				$args['property'] = $property;
+			}
+			if( null !== $property_mode ){
+				$args['propertyMode'] = $property_mode;
+			}
+			if( null !== $form_submit_mode ){
+				$args['formSubmissionMode'] = $form_submit_mode;
+			}
+			if( null !== $list_memberships ){
+				$args['showListMemberships'] = $list_memberships;
+			}
+
+			return $this->build_request( 'contacts/v1/lists/all/contacts/all', $args )->fetch();
 		}
 
 		function get_recent_contacts() {
