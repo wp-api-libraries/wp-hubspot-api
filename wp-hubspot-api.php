@@ -582,9 +582,12 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
      * you know where you are in the list of contacts. You can then use the "vid-offset" field in the "vidOffset"
      * parameter described below.
      *
+<<<<<<< HEAD
      * @api GET
      * @see https://developers.hubspot.com/docs/methods/contacts/get_contacts Documentation
      *
+=======
+>>>>>>> 9dfbdf4077a94b6a53793c2b6d0771efec6f323e
      * @param  int    $count            This parameter lets you specify the amount of contacts to return in your API
      *                                  call. The default for this parameter (if it isn't specified) is 20 contacts.
      *                                  The maximum amount of contacts you can have returned to you via this parameter
