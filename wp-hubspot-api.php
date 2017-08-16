@@ -2,7 +2,7 @@
 /**
  * WP HubSpot API
  *
- * @package WP-HubSpot-API
+ * @package WP-API-Libraries\WP-HubSpot-API
  */
 
 /*
