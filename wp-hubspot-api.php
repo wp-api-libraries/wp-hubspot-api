@@ -109,6 +109,10 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			return $this;
 		}
 
+		private function run( $route, $args = array(), $method = 'GET' ){
+			return $this->build_request( $route, $args, $method )->fetch();
+		}
+
 
 		/**
 		 * Fetch the request from the API.
@@ -144,8 +148,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		protected function set_headers() {
 			// Set request headers.
 			$this->args['headers'] = array(
-            'Content-Type' => 'application/json',
-	        );
+        'Content-Type' => 'application/json',
+      );
 
 			if ( ! empty( static::$oauth_token ) ) {
 				$this->args['headers'] = array(
@@ -192,8 +196,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 */
 		function get_content_events( $start_date, $end_date, $limit = null, $offset = null, $content_category = null, $campaign_guid = null, $include_no_campaigns = null ) {
 
-			$request = $this->base_uri . '/calendar/v1/events/content?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'calendar/v1/events/content';
+			return $this->run( $request );
 		}
 
 		/**
@@ -210,8 +214,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 */
 		function get_social_events( $start_date, $end_date, $limit = null, $offset = null, $campaign_guid = null, $include_no_campaigns = null ) {
 
-			$request = $this->base_uri . '/calendar/v1/events/social?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'calendar/v1/events/social';
+			return $this->run( $request );
 
 		}
 
@@ -228,10 +232,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function get_task_events( $start_date, $end_date, $limit = null, $offset = null, $campaign_guid = null, $include_no_campaigns = null ) {
-
-			$request = $this->base_uri . '/calendar/v1/events/task?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
-
+			$request = 'calendar/v1/events/task';
+			return $this->run( $request );
 		}
 
 		/**
@@ -242,8 +244,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 */
 		function create_task() {
 
-			$request = $this->base_uri . '/calendar/v1/events/task?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'calendar/v1/events/task';
+			return $this->run( $request );
 		}
 
 		/**
@@ -255,8 +257,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 */
 		function get_task( $task_id ) {
 
-			$request = $this->base_uri . '/calendar/v1/events/task/'. $task_id .'?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'calendar/v1/events/task/'. $task_id .'';
+			return $this->run( $request );
 
 		}
 
@@ -268,8 +270,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function update_task( $task_id ) {
-			$request = $this->base_uri . '/calendar/v1/events/task/'. $task_id .'?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'calendar/v1/events/task/'. $task_id .'';
+			return $this->run( $request );
 		}
 
 		/**
@@ -280,8 +282,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function delete_task( $task_id ) {
-			$request = $this->base_uri . '/calendar/v1/events/task/'. $task_id .'?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'calendar/v1/events/task/'. $task_id .'';
+			return $this->run( $request );
 		}
 
 		/* Companies. */
@@ -338,8 +340,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function get_recently_modified_companies( $offset = '', $count = '' ) {
-			$request = $this->base_uri . '/companies/v2/companies/recent/modified?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'companies/v2/companies/recent/modified';
+			return $this->run( $request );
 		}
 
 		/**
@@ -351,8 +353,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function get_recently_created_companies( $offset = '', $count = '' ) {
-			$request = $this->base_uri . '/companies/v2/companies/recent/created?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'companies/v2/companies/recent/created';
+			return $this->run( $request );
 		}
 
 		/**
@@ -363,8 +365,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function get_company_by_domain( $domain ) {
-			$request = $this->base_uri . '/companies/v2/companies/domain/'.$domain.'?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'companies/v2/companies/domain/'.$domain.'';
+			return $this->run( $request );
 		}
 
 		/**
@@ -375,8 +377,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function get_company( $company_id ) {
-			$request = $this->base_uri . '/companies/v2/companies/'.$company_id.'?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'companies/v2/companies/'.$company_id.'';
+			return $this->run( $request );
 		}
 
 		/**
@@ -389,8 +391,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function get_company_contacts( $company_id, $vidoffset = '', $count = '' ) {
-			$request = $this->base_uri . '/companies/v2/companies/'.$company_id.'/contacts?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'companies/v2/companies/'.$company_id.'/contacts';
+			return $this->run( $request );
 		}
 
 		/**
@@ -403,8 +405,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function get_company_contacts_ids( $company_id, $vidoffset = '', $count = '' ) {
-			$request = $this->base_uri . '/companies/v2/companies/'.$company_id.'/vids?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'companies/v2/companies/'.$company_id.'/vids';
+			return $this->run( $request );
 		}
 
 
@@ -415,8 +417,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function add_company() {
-			$request = $this->base_uri . '/companies/v2/companies?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'companies/v2/companies';
+			return $this->run( $request );
 		}
 
 		/**
@@ -428,8 +430,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function add_contact_to_company( $company_id, $contact_vid ) {
-			$request = $this->base_uri . '/engagements/v1/engagements/'.$company_id.'/associations/contact/'. $contact_vid .'?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'engagements/v1/engagements/'.$company_id.'/associations/contact/'. $contact_vid .'';
+			return $this->run( $request );
 		}
 
 		/**
@@ -440,8 +442,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function update_company( $company_id ) {
-			$request = $this->base_uri . '/companies/v2/companies/'.$company_id.'?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'companies/v2/companies/'.$company_id.'';
+			return $this->run( $request );
 		}
 
 		/**
@@ -452,8 +454,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function delete_company( $company_id ) {
-			$request = $this->base_uri . '/companies/v2/companies/'.$company_id.'?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'companies/v2/companies/'.$company_id.'';
+			return $this->run( $request );
 		}
 
 		/**
@@ -465,8 +467,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function remove_contact_from_company( $company_id, $contact_vid ) {
-			$request = $this->base_uri . '/companies/v2/companies/'. $company_id .'/contacts/'.$contact_vid.'?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'companies/v2/companies/'. $company_id .'/contacts/'.$contact_vid.'';
+			return $this->run( $request );
 		}
 
 		/* Companies Properties. */
@@ -545,8 +547,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function update_contact( $contact_id ) {
-			$request = $this->base_uri . '/contacts/v1/contact/vid/'. $contact_id .'/profile?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'contacts/v1/contact/vid/'. $contact_id .'/profile';
+			return $this->run( $request );
 		}
 
 
@@ -558,8 +560,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function create_or_update_contact( $email ) {
-			$request = $this->base_uri . '/contacts/v1/contact/createOrUpdate/email/' . $email . '/?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'contacts/v1/contact/createOrUpdate/email/' . $email . '/';
+			return $this->run( $request );
 		}
 
 		/**
@@ -569,8 +571,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function create_or_update_batch_contacts() {
-			$request = $this->base_uri . '/contacts/v1/contact/batch/?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'contacts/v1/contact/batch/';
+			return $this->run( $request );
 		}
 
 		function delete_contact() {
@@ -640,6 +642,14 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			return $this->build_request( 'contacts/v1/lists/all/contacts/all', $args )->fetch();
 		}
 
+		function get_contact( $contact_id ){
+			return $this->run( 'contacts/v1/contact/vid/' . $contact_id . '/profile' );
+		}
+
+		function get_contact_by_email( $contact_email ){
+			return $this->run( 'contacts/v1/contact/email/' . $contact_email . '/profile' );
+		}
+
 		function get_recent_contacts() {
 			// https://api.hubapi.com/contacts/v1/lists/recently_updated/contacts/recent?hapikey=demo&count=2
 
@@ -695,8 +705,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function get_keyword_list( $search ) {
-			$request = $this->base_uri . '/keywords/v1/keywords?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'keywords/v1/keywords';
+			return $this->run( $request );
 		}
 
 		/**
@@ -707,8 +717,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function get_keyword( $keyword_guid ) {
-			$request = $this->base_uri . '/keywords/v1/keywords/'.$keyword_guid.'?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			return $this->run( 'keywords/v1/keywords/'.$keyword_guid );
 		}
 
 		function add_keyword() {
@@ -723,8 +732,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function delete_keyword( $keyword_guid ) {
-			$request = $this->base_uri . '/keywords/v1/keywords/'.$keyword_guid.'?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			return $this->run( 'keywords/v1/keywords/' . $keyword_guid );
 		}
 
 		/* Owners. */
@@ -760,7 +768,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		}
 
 		function get_deal() {
-			// 'https://api.hubapi.com/deals/v1/deal/3865198?hapikey=demo'
+			// 'https://api.hubapi.com/deals/v1/deal/3865198'
 		}
 
 		/**
@@ -776,8 +784,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function get_all_deals( $limit = null, $offset = null, $properties = null, $properties_with_history = null, $associations ){
-			$request = $this->base_uri . '/deals/v1/deal/paged?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			return $this->run( 'deals/v1/deal/paged' );
 		}
 
 		function get_recently_modified_deals() {
@@ -933,8 +940,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function create_timeline_event_type( $app_id, $name, $header_template = null, $detail_template = null, $object_type = null ) {
-			$request = $this->base_uri . '/integrations/v1/'.$app_id.'/timeline/event-types?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			return $this->run( 'integrations/v1/'.$app_id.'/timeline/event-types' );
 		}
 
 
@@ -948,8 +954,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function get_smtp_tokens() {
-			$request = $this->base_uri . '/email/public/v1/smtpapi/tokens?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'email/public/v1/smtpapi/tokens';
+			return $this->run( $request );
 		}
 
 		/**
@@ -961,8 +967,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function add_smtp_token( $createdby, $campaign_name ) {
-			$request = $this->base_uri . '/email/public/v1/smtpapi/tokens?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'email/public/v1/smtpapi/tokens';
+			return $this->run( $request );
 		}
 
 		function reset_smtp_api_token( $user_name ) {
