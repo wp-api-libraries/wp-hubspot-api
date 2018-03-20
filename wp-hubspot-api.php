@@ -18,7 +18,8 @@
 */
 
 /* Exit if accessed directly */
-if ( ! defined( 'ABSPATH' ) ) { exit; }
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; }
 
 
 if ( ! class_exists( 'HubSpotAPI' ) ) {
@@ -42,19 +43,19 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * api_key
 		 *
 		 * @var mixed
-		 * @access private
+		 * @access protected
 		 * @static
 		 */
-		static private $api_key;
+		static protected $api_key;
 
 		/**
 		 * oauth_token
 		 *
 		 * @var mixed
-		 * @access private
+		 * @access protected
 		 * @static
 		 */
-		static private $oauth_token;
+		static protected $oauth_token;
 
 		/**
 		 * BaseAPI Endpoint
@@ -79,7 +80,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function __construct( $api_key = null, $oauth_token = null ) {
-			static::$api_key = $api_key;
+			static::$api_key     = $api_key;
 			static::$oauth_token = $oauth_token;
 		}
 
@@ -95,7 +96,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			// Start building query.
 			$this->set_headers();
 			$this->args['method'] = $method;
-			$this->route = $route;
+			$this->route          = $route;
 
 			// Generate query string for GET requests.
 			if ( 'GET' === $method ) {
@@ -113,6 +114,19 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			}
 
 			return $this;
+		}
+
+		/**
+		 * run function.
+		 *
+		 * @access private
+		 * @param mixed $route
+		 * @param array $args (default: array())
+		 * @param string $method (default: 'GET')
+		 * @return void
+		 */
+		private function run( $route, $args = array(), $method = 'GET' ) {
+			return $this->build_request( $route, $args, $method )->fetch();
 		}
 
 
@@ -145,12 +159,12 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		protected function set_headers() {
 			// Set request headers.
 			$this->args['headers'] = array(
-            'Content-Type' => 'application/json',
-	        );
+				'Content-Type' => 'application/json',
+			);
 
 			if ( ! empty( static::$oauth_token ) ) {
 				$this->args['headers'] = array(
-					'Authorization' => 'Bearer '. static::$oauth_token,
+					'Authorization' => 'Bearer ' . static::$oauth_token,
 				);
 			}
 
@@ -193,8 +207,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 */
 		function get_content_events( $start_date, $end_date, $limit = null, $offset = null, $content_category = null, $campaign_guid = null, $include_no_campaigns = null ) {
 
-			$request = $this->base_uri . '/calendar/v1/events/content?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'calendar/v1/events/content';
+			return $this->run( $request );
 		}
 
 		/**
@@ -211,8 +225,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 */
 		function get_social_events( $start_date, $end_date, $limit = null, $offset = null, $campaign_guid = null, $include_no_campaigns = null ) {
 
-			$request = $this->base_uri . '/calendar/v1/events/social?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'calendar/v1/events/social';
+			return $this->run( $request );
 
 		}
 
@@ -229,10 +243,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function get_task_events( $start_date, $end_date, $limit = null, $offset = null, $campaign_guid = null, $include_no_campaigns = null ) {
-
-			$request = $this->base_uri . '/calendar/v1/events/task?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
-
+			$request = 'calendar/v1/events/task';
+			return $this->run( $request );
 		}
 
 		/**
@@ -243,8 +255,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 */
 		function create_task() {
 
-			$request = $this->base_uri . '/calendar/v1/events/task?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'calendar/v1/events/task';
+			return $this->run( $request );
 		}
 
 		/**
@@ -256,8 +268,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 */
 		function get_task( $task_id ) {
 
-			$request = $this->base_uri . '/calendar/v1/events/task/'. $task_id .'?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'calendar/v1/events/task/' . $task_id . '';
+			return $this->run( $request );
 
 		}
 
@@ -269,8 +281,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function update_task( $task_id ) {
-			$request = $this->base_uri . '/calendar/v1/events/task/'. $task_id .'?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'calendar/v1/events/task/' . $task_id . '';
+			return $this->run( $request );
 		}
 
 		/**
@@ -281,8 +293,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function delete_task( $task_id ) {
-			$request = $this->base_uri . '/calendar/v1/events/task/'. $task_id .'?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'calendar/v1/events/task/' . $task_id . '';
+			return $this->run( $request );
 		}
 
 		/* Companies. */
@@ -314,16 +326,16 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		function get_companies( int $limit = null, int $offset = null, $properties = null, $properties_with_history = null ) {
 			$args = array();
 
-			if( null !== $limit ){
+			if ( null !== $limit ) {
 				$args['limit'] = $limit;
 			}
-			if( null !== $offset ){
+			if ( null !== $offset ) {
 				$args['offset'] = $offset;
 			}
-			if( null !== $properties ){
+			if ( null !== $properties ) {
 				$args['properties'] = $properties;
 			}
-			if( null !== $properties_with_history ){
+			if ( null !== $properties_with_history ) {
 				$args['propertiesWithHistory'] = $properties_with_history;
 			}
 
@@ -339,8 +351,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function get_recently_modified_companies( $offset = '', $count = '' ) {
-			$request = $this->base_uri . '/companies/v2/companies/recent/modified?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'companies/v2/companies/recent/modified';
+			return $this->run( $request );
 		}
 
 		/**
@@ -352,8 +364,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function get_recently_created_companies( $offset = '', $count = '' ) {
-			$request = $this->base_uri . '/companies/v2/companies/recent/created?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'companies/v2/companies/recent/created';
+			return $this->run( $request );
 		}
 
 		/**
@@ -364,8 +376,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function get_company_by_domain( $domain ) {
-			$request = $this->base_uri . '/companies/v2/companies/domain/'.$domain.'?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'companies/v2/companies/domain/' . $domain . '';
+			return $this->run( $request );
 		}
 
 		/**
@@ -376,36 +388,36 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function get_company( $company_id ) {
-			$request = $this->base_uri . '/companies/v2/companies/'.$company_id.'?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'companies/v2/companies/' . $company_id . '';
+			return $this->run( $request );
 		}
 
 		/**
 		 * Get Company Contacts.
 		 *
 		 * @access public
-		 * @param mixed $company_id Company ID.
+		 * @param mixed  $company_id Company ID.
 		 * @param string $vidoffset (default: '') Vid Offset.
 		 * @param string $count (default: '') Count.
 		 * @return void
 		 */
 		function get_company_contacts( $company_id, $vidoffset = '', $count = '' ) {
-			$request = $this->base_uri . '/companies/v2/companies/'.$company_id.'/contacts?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'companies/v2/companies/' . $company_id . '/contacts';
+			return $this->run( $request );
 		}
 
 		/**
 		 * Get Company Contacts IDs.
 		 *
 		 * @access public
-		 * @param mixed $company_id Company ID.
+		 * @param mixed  $company_id Company ID.
 		 * @param string $vidoffset (default: '') VidOffset.
 		 * @param string $count (default: '') Count.
 		 * @return void
 		 */
 		function get_company_contacts_ids( $company_id, $vidoffset = '', $count = '' ) {
-			$request = $this->base_uri . '/companies/v2/companies/'.$company_id.'/vids?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'companies/v2/companies/' . $company_id . '/vids';
+			return $this->run( $request );
 		}
 
 
@@ -416,8 +428,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function add_company() {
-			$request = $this->base_uri . '/companies/v2/companies?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'companies/v2/companies';
+			return $this->run( $request );
 		}
 
 		/**
@@ -429,8 +441,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function add_contact_to_company( $company_id, $contact_vid ) {
-			$request = $this->base_uri . '/engagements/v1/engagements/'.$company_id.'/associations/contact/'. $contact_vid .'?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'engagements/v1/engagements/' . $company_id . '/associations/contact/' . $contact_vid . '';
+			return $this->run( $request );
 		}
 
 		/**
@@ -441,8 +453,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function update_company( $company_id ) {
-			$request = $this->base_uri . '/companies/v2/companies/'.$company_id.'?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'companies/v2/companies/' . $company_id . '';
+			return $this->run( $request );
 		}
 
 		/**
@@ -453,8 +465,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function delete_company( $company_id ) {
-			$request = $this->base_uri . '/companies/v2/companies/'.$company_id.'?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'companies/v2/companies/' . $company_id . '';
+			return $this->run( $request );
 		}
 
 		/**
@@ -466,8 +478,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function remove_contact_from_company( $company_id, $contact_vid ) {
-			$request = $this->base_uri . '/companies/v2/companies/'. $company_id .'/contacts/'.$contact_vid.'?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'companies/v2/companies/' . $company_id . '/contacts/' . $contact_vid . '';
+			return $this->run( $request );
 		}
 
 		/* Companies Properties. */
@@ -488,6 +500,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * Get all Company Properties.
 		 *
 		 * Get all of the company properties, including their definition, for a given portal.
+		 *
 		 * @api GET
 		 * @see https://developers.hubspot.com/docs/methods/companies/get_company_properties Documentation
 		 * @return array A list of company properties.
@@ -533,9 +546,9 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 */
 		function create_contact( $properties ) {
 			$args = array(
-				'properties' => $properties
+				'properties' => $properties,
 			);
-			return $this->build_request( 'contacts/v1/contact', $args,  'POST' )->fetch();
+			return $this->build_request( 'contacts/v1/contact', $args, 'POST' )->fetch();
 		}
 
 		/**
@@ -545,9 +558,12 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @param mixed $contact_id
 		 * @return void
 		 */
-		function update_contact( $contact_id ) {
-			$request = $this->base_uri . '/contacts/v1/contact/vid/'. $contact_id .'/profile?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+
+		function update_contact( $contact_id, $properties ) {
+			$args = array(
+				'properties' => $properties
+			);
+			return $this->run( 'contacts/v1/contact/vid/'. $contact_id .'/profile', $args, 'POST' );
 		}
 
 
@@ -559,8 +575,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function create_or_update_contact( $email ) {
-			$request = $this->base_uri . '/contacts/v1/contact/createOrUpdate/email/' . $email . '/?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'contacts/v1/contact/createOrUpdate/email/' . $email . '/';
+			return $this->run( $request );
 		}
 
 		/**
@@ -570,95 +586,98 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function create_or_update_batch_contacts() {
-			$request = $this->base_uri . '/contacts/v1/contact/batch/?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'contacts/v1/contact/batch/';
+			return $this->run( $request );
 		}
 
 		function delete_contact() {
 			// https://api.hubapi.com/contacts/v1/contact/vid/61571?hapikey=demo
-
 		}
 
-    /**
-     * Get all contacts
-     *
-     * For a given portal, return all contacts that have been created in the portal.
-     *
-     * A paginated list of contacts will be returned to you, with a maximum of 100 contacts per page.
-     *
-     * Please Note There are 2 fields here to pay close attention to: the "has-more" field that will let you know
-     * whether there are more contacts that you can pull from this portal, and the "vid-offset" field which will let
-     * you know where you are in the list of contacts. You can then use the "vid-offset" field in the "vidOffset"
-     * parameter described below.
-     *
-     * @api GET
-     * @see https://developers.hubspot.com/docs/methods/contacts/get_contacts Documentation
-     *
-     * @param  int    $count            This parameter lets you specify the amount of contacts to return in your API
-     *                                  call. The default for this parameter (if it isn't specified) is 20 contacts.
-     *                                  The maximum amount of contacts you can have returned to you via this parameter
-     *                                  is 100.
-     * @param  int    $contact_offset   Used to page through the contacts. Every call to this endpoint will return a
-     *                                  vid-offset value. This value is used in the vidOffset parameter of the next
-     *                                  call to get the next page of contacts.
-     * @param  string $property         By default, only a few standard properties will be included in the response
-     *                                  data. If you include the 'property' parameter, then you will instead get the
-     *                                  specified property in the response. This parameter may be included multiple
-     *                                  times to specify multiple properties. NOTE: Contacts only store data for
-     *                                  properties with a value, so records with no value for a property will not
-     *                                  include that property, even if the property is specified in the request URL.
-     * @param  string $property_mode    One of “value_only” or “value_and_history” to specify if the current value for a
-     *                                  property should be fetched, or the value and all the historical values for that
-     *                                  property. Default is “value_only”.
-     * @param  string $form_submit_mode One of “all”, “none”, “newest”, “oldest” to specify which form submissions
-     *                                  should be fetched. Default is “newest”.
-     * @param  bool   $list_memberships Boolean "true" or "false" to indicate whether current list memberships should be
-     *                                  fetched for the contact. Default is false.
-     * @return array                    Array of contact info.
-     */
+		/**
+		 * Get all contacts
+		 *
+		 * For a given portal, return all contacts that have been created in the portal.
+		 *
+		 * A paginated list of contacts will be returned to you, with a maximum of 100 contacts per page.
+		 *
+		 * Please Note There are 2 fields here to pay close attention to: the "has-more" field that will let you know
+		 * whether there are more contacts that you can pull from this portal, and the "vid-offset" field which will let
+		 * you know where you are in the list of contacts. You can then use the "vid-offset" field in the "vidOffset"
+		 * parameter described below.
+		 *
+		 * @api GET
+		 * @see https://developers.hubspot.com/docs/methods/contacts/get_contacts Documentation
+		 *
+		 * @param  int    $count            This parameter lets you specify the amount of contacts to return in your API
+		 *                                  call. The default for this parameter (if it isn't specified) is 20 contacts.
+		 *                                  The maximum amount of contacts you can have returned to you via this parameter
+		 *                                  is 100.
+		 * @param  int    $contact_offset   Used to page through the contacts. Every call to this endpoint will return a
+		 *                                  vid-offset value. This value is used in the vidOffset parameter of the next
+		 *                                  call to get the next page of contacts.
+		 * @param  string $property         By default, only a few standard properties will be included in the response
+		 *                                  data. If you include the 'property' parameter, then you will instead get the
+		 *                                  specified property in the response. This parameter may be included multiple
+		 *                                  times to specify multiple properties. NOTE: Contacts only store data for
+		 *                                  properties with a value, so records with no value for a property will not
+		 *                                  include that property, even if the property is specified in the request URL.
+		 * @param  string $property_mode    One of “value_only” or “value_and_history” to specify if the current value for a
+		 *                                  property should be fetched, or the value and all the historical values for that
+		 *                                  property. Default is “value_only”.
+		 * @param  string $form_submit_mode One of “all”, “none”, “newest”, “oldest” to specify which form submissions
+		 *                                  should be fetched. Default is “newest”.
+		 * @param  bool   $list_memberships Boolean "true" or "false" to indicate whether current list memberships should be
+		 *                                  fetched for the contact. Default is false.
+		 * @return array                    Array of contact info.
+		 */
 		function get_all_contacts( int $count = null, int $contact_offset = null, string $property = null, string $property_mode = null, string $form_submit_mode = null, bool $list_memberships = null ) {
 			$args = array();
 
-			if( null !== $count ){
+			if ( null !== $count ) {
 				$args['count'] = $count;
 			}
-			if( null !== $contact_offset ){
+			if ( null !== $contact_offset ) {
 				$args['vidOffset'] = $contact_offset;
 			}
-			if( null !== $property ){
+			if ( null !== $property ) {
 				$args['property'] = $property;
 			}
-			if( null !== $property_mode ){
+			if ( null !== $property_mode ) {
 				$args['propertyMode'] = $property_mode;
 			}
-			if( null !== $form_submit_mode ){
+			if ( null !== $form_submit_mode ) {
 				$args['formSubmissionMode'] = $form_submit_mode;
 			}
-			if( null !== $list_memberships ){
+			if ( null !== $list_memberships ) {
 				$args['showListMemberships'] = $list_memberships;
 			}
 
 			return $this->build_request( 'contacts/v1/lists/all/contacts/all', $args )->fetch();
 		}
 
+		function get_contact( $contact_id ) {
+			return $this->run( 'contacts/v1/contact/vid/' . $contact_id . '/profile' );
+		}
+
+		function get_contact_by_email( $contact_email ) {
+			return $this->run( 'contacts/v1/contact/email/' . $contact_email . '/profile' );
+		}
+
 		function get_recent_contacts() {
 			// https://api.hubapi.com/contacts/v1/lists/recently_updated/contacts/recent?hapikey=demo&count=2
-
 		}
 
 		function get_contact_by_token( $contact_token ) {
 			// http://api.hubapi.com/contacts/v1/contact/utk/f844d2217850188692f2610c717c2e9b/profile?hapikey=demo
-
 		}
 
 		function get_batch_contacts_by_token() {
 			// https://api.hubapi.com/contacts/v1/contact/utks/batch/?utk=f844d2217850188692f2610c717c2e9b&utk=j94344d22178501692f2610c717c2e9b&hapikey=demo
-
 		}
 
 		function search_contacts( $search_query ) {
 			// https://api.hubapi.com/contacts/v1/search/query?q=testingapis&hapikey=demo
-
 		}
 
 		function merge_contacts( $contact_id, $vid_to_merge ) {
@@ -696,8 +715,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function get_keyword_list( $search ) {
-			$request = $this->base_uri . '/keywords/v1/keywords?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'keywords/v1/keywords';
+			return $this->run( $request );
 		}
 
 		/**
@@ -708,8 +727,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function get_keyword( $keyword_guid ) {
-			$request = $this->base_uri . '/keywords/v1/keywords/'.$keyword_guid.'?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			return $this->run( 'keywords/v1/keywords/' . $keyword_guid );
 		}
 
 		function add_keyword() {
@@ -724,8 +742,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function delete_keyword( $keyword_guid ) {
-			$request = $this->base_uri . '/keywords/v1/keywords/'.$keyword_guid.'?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			return $this->run( 'keywords/v1/keywords/' . $keyword_guid );
 		}
 
 		/* Owners. */
@@ -761,7 +778,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		}
 
 		function get_deal() {
-			// 'https://api.hubapi.com/deals/v1/deal/3865198?hapikey=demo'
+			// 'https://api.hubapi.com/deals/v1/deal/3865198'
 		}
 
 		/**
@@ -776,9 +793,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @param mixed $associations Associations.
 		 * @return void
 		 */
-		function get_all_deals( $limit = null, $offset = null, $properties = null, $properties_with_history = null, $associations ){
-			$request = $this->base_uri . '/deals/v1/deal/paged?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+		function get_all_deals( $limit = null, $offset = null, $properties = null, $properties_with_history = null, $associations ) {
+			return $this->run( 'deals/v1/deal/paged' );
 		}
 
 		function get_recently_modified_deals() {
@@ -799,12 +815,10 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 
 		function delete_deal_association() {
 			// 'https://api.hubapi.com/deals/v1/deal/1126609/associations/CONTACT?id=394455&hapikey=demo'
-
 		}
 
 		function get_associated_deals() {
 			// https://api.hubapi.com/deals/v1/deal/associated/contact/1002325/paged?hapikey=demo&includeAssociations=true&limit=10&properties=dealname
-
 		}
 
 		/* Deal Pipelines. */
@@ -934,8 +948,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function create_timeline_event_type( $app_id, $name, $header_template = null, $detail_template = null, $object_type = null ) {
-			$request = $this->base_uri . '/integrations/v1/'.$app_id.'/timeline/event-types?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			return $this->run( 'integrations/v1/' . $app_id . '/timeline/event-types' );
 		}
 
 
@@ -949,8 +962,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function get_smtp_tokens() {
-			$request = $this->base_uri . '/email/public/v1/smtpapi/tokens?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'email/public/v1/smtpapi/tokens';
+			return $this->run( $request );
 		}
 
 		/**
@@ -962,8 +975,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function add_smtp_token( $createdby, $campaign_name ) {
-			$request = $this->base_uri . '/email/public/v1/smtpapi/tokens?hapikey=' . static::$api_key;
-			return $this->fetch( $request );
+			$request = 'email/public/v1/smtpapi/tokens';
+			return $this->run( $request );
 		}
 
 		function reset_smtp_api_token( $user_name ) {
