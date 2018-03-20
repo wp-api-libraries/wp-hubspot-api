@@ -37,7 +37,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @var array
 		 * @access protected
 		 */
-		private $args = array();
+		protected $args = array();
 
 		/**
 		 * api_key
@@ -656,8 +656,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			return $this->build_request( 'contacts/v1/lists/all/contacts/all', $args )->fetch();
 		}
 
-		function get_contact( $contact_id ) {
-			return $this->run( 'contacts/v1/contact/vid/' . $contact_id . '/profile' );
+		function get_contact( $contact_id, $args = array() ) {
+			return $this->run( 'contacts/v1/contact/vid/' . $contact_id . '/profile', $args );
 		}
 
 		function get_contact_by_email( $contact_email ) {
