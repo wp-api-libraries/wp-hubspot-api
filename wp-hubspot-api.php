@@ -43,19 +43,19 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * api_key
 		 *
 		 * @var mixed
-		 * @access private
+		 * @access protected
 		 * @static
 		 */
-		static private $api_key;
+		static protected $api_key;
 
 		/**
 		 * oauth_token
 		 *
 		 * @var mixed
-		 * @access private
+		 * @access protected
 		 * @static
 		 */
-		static private $oauth_token;
+		static protected $oauth_token;
 
 		/**
 		 * BaseAPI Endpoint
@@ -557,9 +557,12 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @param mixed $contact_id
 		 * @return void
 		 */
-		function update_contact( $contact_id ) {
-			$request = 'contacts/v1/contact/vid/' . $contact_id . '/profile';
-			return $this->run( $request );
+
+		function update_contact( $contact_id, $properties ) {
+			$args = array(
+				'properties' => $properties
+			);
+			return $this->run( 'contacts/v1/contact/vid/'. $contact_id .'/profile', $args, 'POST' );
 		}
 
 
