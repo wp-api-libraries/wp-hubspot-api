@@ -100,6 +100,12 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			// Generate query string for GET requests.
 			if ( 'GET' === $method ) {
 				$this->route = add_query_arg( array_filter( $args ), $route );
+				if ( ! empty( static::$api_key ) ) {
+					$this->route = add_query_arg( 'hapikey', static::$api_key, $this->route );
+				}
+
+				// Hubspot api is jank and doesnt use proper URL encode standards... So we must jank it up.
+				$this->route = preg_replace( '/\%5B\d+\%5D/', '', $this->route );
 			} elseif ( 'application/json' === $this->args['headers']['Content-Type'] ) {
 				$this->args['body'] = wp_json_encode( $args );
 			} else {
@@ -117,11 +123,6 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return array|WP_Error Request results or WP_Error on request failure.
 		 */
 		protected function fetch() {
-
-			if ( ! empty( static::$api_key ) ) {
-				$this->route = add_query_arg( 'hapikey', static::$api_key, $this->route );
-			}
-
 			// Make the request.
 			$response = wp_remote_request( $this->base_uri . $this->route, $this->args );
 
