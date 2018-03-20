@@ -110,6 +110,15 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			return $this;
 		}
 
+		/**
+		 * run function.
+		 *
+		 * @access private
+		 * @param mixed $route
+		 * @param array $args (default: array())
+		 * @param string $method (default: 'GET')
+		 * @return void
+		 */
 		private function run( $route, $args = array(), $method = 'GET' ) {
 			return $this->build_request( $route, $args, $method )->fetch();
 		}
