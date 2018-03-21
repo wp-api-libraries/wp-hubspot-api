@@ -631,7 +631,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 *                                  fetched for the contact. Default is false.
 		 * @return array                    Array of contact info.
 		 */
-		function get_all_contacts( int $count = null, int $contact_offset = null, string $property = null, string $property_mode = null, string $form_submit_mode = null, bool $list_memberships = null ) {
+		function get_all_contacts( int $count = null, int $contact_offset = null, $property = null, string $property_mode = null, string $form_submit_mode = null, bool $list_memberships = null ) {
 			$args = array();
 
 			if ( null !== $count ) {
