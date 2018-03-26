@@ -95,15 +95,13 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		protected function build_request( $route, $args = array(), $method = 'GET' ) {
 			// Start building query.
 			$this->set_headers();
+
 			$this->args['method'] = $method;
 			$this->route          = $route;
 
 			// Generate query string for GET requests.
 			if ( 'GET' === $method ) {
 				$this->route = add_query_arg( array_filter( $args ), $route );
-				if ( ! empty( static::$api_key ) ) {
-					$this->route = add_query_arg( 'hapikey', static::$api_key, $this->route );
-				}
 
 				// Hubspot api is jank and doesnt use proper URL encode standards... So we must jank it up.
 				$this->route = preg_replace( '/\%5B\d+\%5D/', '', $this->route );
@@ -111,6 +109,10 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 				$this->args['body'] = wp_json_encode( $args );
 			} else {
 				$this->args['body'] = $args;
+			}
+
+			if ( ! empty( static::$api_key ) ) {
+				$this->route = add_query_arg( 'hapikey', static::$api_key, $this->route );
 			}
 
 			return $this;
@@ -570,10 +572,12 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return array              New contact info.
 		 */
 		function create_contact( $properties ) {
-			$args = array(
-				'properties' => $properties,
-			);
-			return $this->build_request( 'contacts/v1/contact', $args, 'POST' )->fetch();
+			if( ! isset( $properties['properties'] ) ){
+				$properties = array(
+					'properties' => $properties,
+				);
+			}
+			return $this->run( 'contacts/v1/contact', $properties, 'POST' );
 		}
 
 		/**
