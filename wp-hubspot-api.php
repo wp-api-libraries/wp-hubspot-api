@@ -454,9 +454,13 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @access public
 		 * @return void
 		 */
-		function add_company() {
-			$request = 'companies/v2/companies';
-			return $this->run( $request );
+		function create_company( $properties ) {
+			if( ! isset( $properties['properties'] ) ){
+				$properties = array(
+					'properties' => $properties
+				);
+			}
+			return $this->run( 'companies/v2/companies', $properties, 'POST' );
 		}
 
 		/**
