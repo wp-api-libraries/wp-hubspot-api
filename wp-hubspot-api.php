@@ -169,20 +169,22 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * Allows cleaner method creation/calls.
 		 *
 		 * For example, to get 20 contacts offset by cid, and get properties, you could
-		 *   $hubspotapi->sp( 20, $cid, array( 'hs_lead_status', 'firstname', 'lastname',
-		 *   'hubspot_owner_id', 'lifecyclestage' ) )->get_all_contacts();
+		 *   $hubspotapi->sp( 20, null, array( 'hs_lead_status', 'firstname', 'lastname',
+		 *   'hubspot_owner_id', 'lifecyclestage' ), array( 'vidOffset' => $cid ) )->get_all_contacts();
 		 *
 		 * @param integer $limit      [description]
 		 * @param [type]  $offset     [description]
 		 * @param [type]  $properties [description]
 		 * @return HubspotAPI         $this.
 		 */
-		public function set_props( $limit = 20, $offset = null, $properties = null ){
-			$this->args['body'] = $this->parse_args(array(
+		public function set_props( $limit = 20, $offset = null, $properties = null, $alt_args = array() ){
+			$args = $this->parse_args(array(
 				'limit' => intval( $limit ),
 				'offset' => $offset,
-				'properties' => $properties
+				'property' => $properties
 			));
+
+			$this->args['body'] = $this->parse_args( $alt_args, $args );
 
 			return $this;
 		}
@@ -195,8 +197,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @param  [type]  $properties [description]
 		 * @return [type]              [description]
 		 */
-		public function sp( $limit = 20, $offset = null, $properties = nul ){
-			return $this->set_props( $limit, $offset, $properties );
+		public function sp( $limit = 20, $offset = null, $properties = null, $alt_args = array() ){
+			return $this->set_props( $limit, $offset, $properties, $alt_args );
 		}
 
 		/**
