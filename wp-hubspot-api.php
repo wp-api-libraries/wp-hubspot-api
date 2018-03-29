@@ -99,9 +99,13 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			$this->args['method'] = $method;
 			$this->route          = $route;
 
+			if ( ! empty( static::$api_key ) ) {
+				$this->route = add_query_arg( 'hapikey', static::$api_key, $this->route );
+			}
+
 			// Generate query string for GET requests.
 			if ( 'GET' === $method ) {
-				$this->route = add_query_arg( array_filter( $args ), $route );
+				$this->route = add_query_arg( array_filter( $args ), $this->route );
 
 				// Hubspot api is jank and doesnt use proper URL encode standards... So we must jank it up.
 				$this->route = preg_replace( '/\%5B\d+\%5D/', '', $this->route );
@@ -109,10 +113,6 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 				$this->args['body'] = wp_json_encode( $args );
 			} else {
 				$this->args['body'] = $args;
-			}
-
-			if ( ! empty( static::$api_key ) ) {
-				$this->route = add_query_arg( 'hapikey', static::$api_key, $this->route );
 			}
 
 			return $this;
@@ -140,6 +140,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 */
 		protected function fetch() {
 			// Make the request.
+			// pp( $this->base_uri . $this->route, $this->args );
 			$response = wp_remote_request( $this->base_uri . $this->route, $this->args );
 
 			// Retrieve Status code & body.
@@ -787,6 +788,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		}
 
 		function search_contacts( $search_query ) {
+			return $this->run( 'contacts/v1/search/query', array( 'q' => $search_query ) );
 			// https://api.hubapi.com/contacts/v1/search/query?q=testingapis&hapikey=demo
 		}
 
