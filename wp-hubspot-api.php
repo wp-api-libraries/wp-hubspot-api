@@ -168,6 +168,10 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 *
 		 * Allows cleaner method creation/calls.
 		 *
+		 * For example, to get 20 contacts offset by cid, and get properties, you could
+		 *   $hubspotapi->sp( 20, $cid, array( 'hs_lead_status', 'firstname', 'lastname',
+		 *   'hubspot_owner_id', 'lifecyclestage' ) )->get_all_contacts();
+		 *
 		 * @param integer $limit      [description]
 		 * @param [type]  $offset     [description]
 		 * @param [type]  $properties [description]
@@ -183,6 +187,14 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			return $this;
 		}
 
+		/**
+		 * A wrapper for set_props.
+		 *
+		 * @param  integer $limit      [description]
+		 * @param  [type]  $offset     [description]
+		 * @param  [type]  $properties [description]
+		 * @return [type]              [description]
+		 */
 		public function sp( $limit = 20, $offset = null, $properties = nul ){
 			return $this->set_props( $limit, $offset, $properties );
 		}
