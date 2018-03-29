@@ -96,6 +96,12 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			// Start building query.
 			$this->set_headers();
 
+			// Merge args with body.
+			if( isset( $this->args['body'] ) ){
+				$args = array_merge( $args, $this->args['body'] );
+				$this->args['body'] = array(); // Just in case.
+			}
+
 			$this->args['method'] = $method;
 			$this->route          = $route;
 
@@ -147,13 +153,38 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			$code = wp_remote_retrieve_response_code( $response );
 			$body = json_decode( wp_remote_retrieve_body( $response ) );
 
+			$this->clear();
+
 			// Return WP_Error if request is not successful.
 			if ( ! $this->is_status_ok( $code ) ) {
 				return new WP_Error( 'response-error', sprintf( __( 'Status: %d', 'wp-hubspot-api' ), $code ), $body );
 			}
-			$this->clear();
 
 			return $body;
+		}
+
+		/**
+		 * Set properties and pagination settings.
+		 *
+		 * Allows cleaner method creation/calls.
+		 *
+		 * @param integer $limit      [description]
+		 * @param [type]  $offset     [description]
+		 * @param [type]  $properties [description]
+		 * @return HubspotAPI         $this.
+		 */
+		public function set_props( $limit = 20, $offset = null, $properties = null ){
+			$this->args['body'] = $this->parse_args(array(
+				'limit' => intval( $limit ),
+				'offset' => $offset,
+				'properties' => $properties
+			));
+
+			return $this;
+		}
+
+		public function sp( $limit = 20, $offset = null, $properties = nul ){
+			return $this->set_props( $limit, $offset, $properties );
 		}
 
 		/**
