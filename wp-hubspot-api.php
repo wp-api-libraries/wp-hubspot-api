@@ -19,7 +19,8 @@
 
 /* Exit if accessed directly */
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; }
+	exit;
+}
 
 
 if ( ! class_exists( 'HubSpotAPI' ) ) {
@@ -1143,6 +1144,41 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		/* Workflows. */
 
 		/* Webhooks. */
+
+		function list_subscriptions( $app_id ){
+			return $this->run( 'webhooks/v1/' . $app_id . '/subscriptions' );
+		}
+
+		function create_subscription( $app_id, $subsription_type, $property_name, $enabled = true ){
+			$subscription = array(
+				'subscriptionDetails' => array(
+					'subscriptionType' => $subscription_type,
+					'propertyName' => $property_name
+				),
+				'enabled' => $enabled
+			);
+			return $this->run( 'webhooks/v1/' . $app_id . '/subscriptions', $subscription, 'POST' );
+		}
+
+		function update_subscription( $app_id, $subscription_id, bool $enabled ){
+			return $this->run( 'webhooks/v1/' . $app_id . '/subscriptions/' . $subscription_id, array( 'enabled' => $enabled ), 'PUT' );
+		}
+
+		function delete_subscription( $app_id, $subscription_id ){
+			return $this->run( 'webhooks/v1/' . $app_id . '/subscriptions/' . $subscription_id );
+		}
+
+		function get_webhook_settings( $app_id ){
+			return $this->run( 'webhooks/v1/' . $app_id . '/settings' );
+		}
+
+		function update_settings( $app_id, $webhookUrl, $maxConcurrentRequests ){
+			$args = array(
+				'webhookUrl' => $webhookUrl,
+				'maxConcurrentRequests' => $maxConcurrentRequests
+			);
+			return $this->run( 'webhooks/v1/' . $app_id . '/settings', $args, 'PUT' );
+		}
 
 	}
 
