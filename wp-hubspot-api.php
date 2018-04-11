@@ -178,27 +178,15 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return HubspotAPI         $this.
 		 */
 		public function set_props( $limit = 20, $offset = null, $properties = null, $alt_args = array() ){
-			$args = $this->parse_args(array(
+			$args = array(
 				'limit' => intval( $limit ),
 				'offset' => $offset,
 				'property' => $properties
-			));
+			);
 
-			$this->args['body'] = $this->parse_args( $alt_args, $args );
+			$this->args['body'] = $this->filter_args( $alt_args, $args );
 
 			return $this;
-		}
-
-		/**
-		 * A wrapper for set_props.
-		 *
-		 * @param  integer $limit      [description]
-		 * @param  [type]  $offset     [description]
-		 * @param  [type]  $properties [description]
-		 * @return [type]              [description]
-		 */
-		public function sp( $limit = 20, $offset = null, $properties = null, $alt_args = array() ){
-			return $this->set_props( $limit, $offset, $properties, $alt_args );
 		}
 
 		/**
@@ -236,28 +224,15 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		}
 
 		/**
-		 * Takes an array of arguments, and 'parses' them for being null or not.
+		 * Takes the elements of one or more arrays, merges them together and
+		 * filters empty and null values out of the resulting array.
 		 *
-		 * Returns an array with the same keys and vals if the val is not null.
-		 *
-		 * Also optionally adds a 'merge' array, to merge into (array_merge( $merge, $results )).
-		 *
-		 * @param  [type] $args  [description]
-		 * @param  array  $merge [description]
-		 * @return [type]        [description]
+		 * @param  array  $args A variable amount of arrays to merge and filter through.
+		 * @return array        A single array of filtered args.
 		 */
-		private function parse_args( $args, $merge = array() ){
-	    $results = array();
-
-	    foreach( $args as $key => $val ){
-	      if( $val !== null ){
-	        $results[$key] = $val;
-	      }else if( is_array( $val ) && ! empty( $val ) ){
-	        $results[$key] = $val;
-	      }
-	    }
-
-	    return array_merge( $merge, $results );
+		private function filter_args( array ...$args ){
+			// Merges arrays and removes empty and null values.
+	    return array_filter( array_merge( ...$args ) );
 	  }
 
 		/* Oauth. */
@@ -712,7 +687,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 */
 		function get_all_contacts( int $count = null, int $contact_offset = null, $property = null, string $property_mode = null, string $form_submit_mode = null, bool $list_memberships = null ) {
 
-			$args = $this->parse_args(array(
+			$args = $this->filter_args(array(
 				'count' => $count,
 				'vidOffset' => $contact_offset,
 				'property' => $property,
