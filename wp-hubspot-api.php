@@ -348,6 +348,58 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 
 		/* Companies. */
 
+		/**
+		 * Add Company.
+		 *
+		 * @access public
+		 * @return void
+		 */
+		function create_company( $properties ) {
+			if( ! isset( $properties['properties'] ) ){
+				$properties = array(
+					'properties' => $properties
+				);
+			}
+			return $this->run( 'companies/v2/companies', $properties, 'POST' );
+		}
+
+		/**
+		 * Update Company.
+		 *
+		 * @access public
+		 * @param mixed $company_id Company ID.
+		 * @return void
+		 */
+		function update_company( $company_id, $properties ) {
+			if( ! isset( $properties['properties'] ) ){
+				$properties = array(
+					'properties' => $properties
+				);
+			}
+			return $this->run( "companies/v2/companies/$company_id", $properties, 'PUT' );
+		}
+
+		/**
+		 * Update a group of Companies.
+		 *
+		 * @access public
+		 * @param mixed $company_id Company ID.
+		 * @return void
+		 */
+		function update_company_group( $company_id, $batch ) {
+			return $this->run( "companies/v1/batch-async/update", $batch, 'PUT' );
+		}
+
+		/**
+		 * Delete Company.
+		 *
+		 * @access public
+		 * @param mixed $company_id Company ID.
+		 * @return void
+		 */
+		function delete_company( $company_id ) {
+			return $this->run( "companies/v2/companies/$company_id", array(), 'DELETE' );
+		}
 
 		/**
 		 * Get Companies.
@@ -366,27 +418,14 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 *                                        include that property, even when you specify the property. A company
 		 *                                        without a value for the website property would not show the website
 		 *                                        property in the results, even with &properties=website in the URL.
-		 * @param string $properties_with_history Works similarly to properties=, but this parameter will include the
+		 * @param string $propertiesWithHistory   Works similarly to properties=, but this parameter will include the
 		 *                                        history for the specified property, instead of just including the current
 		 *                                        value. Use this parameter when you need the full history of changes to a
 		 *                                        property's value.
 		 * @return void
 		 */
-		function get_companies( int $limit = null, int $offset = null, $properties = null, $properties_with_history = null ) {
-			$args = array();
-
-			if ( null !== $limit ) {
-				$args['limit'] = $limit;
-			}
-			if ( null !== $offset ) {
-				$args['offset'] = $offset;
-			}
-			if ( null !== $properties ) {
-				$args['properties'] = $properties;
-			}
-			if ( null !== $properties_with_history ) {
-				$args['propertiesWithHistory'] = $properties_with_history;
-			}
+		function get_companies( int $limit = null, int $offset = null, $properties = null, $propertiesWithHistory = null ) {
+			$args = $this->filter_args( compact('limit', 'offset', 'properties', 'propertiesWithHistory' ) );
 
 			return $this->build_request( 'companies/v2/companies/paged', $args )->fetch();
 		}
@@ -425,8 +464,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function get_company_by_domain( $domain ) {
-			$request = 'companies/v2/companies/domain/' . $domain . '';
-			return $this->run( $request );
+			return $this->run( "companies/v2/companies/domain/$domain" );
 		}
 
 		/**
@@ -437,8 +475,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function get_company( $company_id ) {
-			$request = 'companies/v2/companies/' . $company_id . '';
-			return $this->run( $request );
+			return $this->run( "companies/v2/companies/$company_id" );
 		}
 
 		/**
@@ -451,8 +488,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function get_company_contacts( $company_id, $vidoffset = '', $count = '' ) {
-			$request = 'companies/v2/companies/' . $company_id . '/contacts';
-			return $this->run( $request );
+			return $this->run( "companies/v2/companies/$company_id/contacts" );
 		}
 
 		/**
@@ -465,24 +501,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function get_company_contacts_ids( $company_id, $vidoffset = '', $count = '' ) {
-			$request = 'companies/v2/companies/' . $company_id . '/vids';
-			return $this->run( $request );
-		}
-
-
-		/**
-		 * Add Company.
-		 *
-		 * @access public
-		 * @return void
-		 */
-		function create_company( $properties ) {
-			if( ! isset( $properties['properties'] ) ){
-				$properties = array(
-					'properties' => $properties
-				);
-			}
-			return $this->run( 'companies/v2/companies', $properties, 'POST' );
+			return $this->run( "companies/v2/companies/$company_id/vids" );
 		}
 
 		/**
@@ -494,32 +513,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function add_contact_to_company( $company_id, $contact_vid ) {
-			$request = 'engagements/v1/engagements/' . $company_id . '/associations/contact/' . $contact_vid . '';
-			return $this->run( $request );
-		}
-
-		/**
-		 * Update Company.
-		 *
-		 * @access public
-		 * @param mixed $company_id Company ID.
-		 * @return void
-		 */
-		function update_company( $company_id ) {
-			$request = 'companies/v2/companies/' . $company_id . '';
-			return $this->run( $request );
-		}
-
-		/**
-		 * Delete Company.
-		 *
-		 * @access public
-		 * @param mixed $company_id Company ID.
-		 * @return void
-		 */
-		function delete_company( $company_id ) {
-			$request = 'companies/v2/companies/' . $company_id . '';
-			return $this->run( $request );
+			return $this->run( "engagements/v1/engagements/$company_id/associations/contact/$contact_vid" );
 		}
 
 		/**
@@ -531,8 +525,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function remove_contact_from_company( $company_id, $contact_vid ) {
-			$request = 'companies/v2/companies/' . $company_id . '/contacts/' . $contact_vid . '';
-			return $this->run( $request );
+			return $this->run( "companies/v2/companies/$company_id/contacts/$contact_vid", array(), 'DELETE' );
 		}
 
 		/* Companies Properties. */
