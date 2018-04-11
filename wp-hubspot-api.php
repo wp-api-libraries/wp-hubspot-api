@@ -19,7 +19,8 @@
 
 /* Exit if accessed directly */
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; }
+	exit;
+}
 
 
 if ( ! class_exists( 'HubSpotAPI' ) ) {
@@ -561,12 +562,27 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			return $this->build_request( 'properties/v1/companies/properties' )->fetch();
 		}
 
-		function get_company_property() {
+		/**
+		 * get_company_property function.
+		 * @see https://developers.hubspot.com/docs/methods/companies/get_company_property
+		 *
+		 * @access public
+		 * @return void
+		 */
+		function get_company_property( $property_name ) {
+			return $this->build_request( 'properties/v1/companies/properties/named/' . $property_name )->fetch();
 
 		}
 
+		/**
+		 * add_company_property_group function.
+		 *
+		 * @see https://developers.hubspot.com/docs/methods/companies/create_company_property_group
+		 * @access public
+		 * @return void
+		 */
 		function add_company_property_group() {
-
+			return $this->build_request( 'properties/v1/companies/groups/' . $property_name, 'POST' )->fetch();
 		}
 
 		function update_company_property_group() {
@@ -1118,6 +1134,41 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		/* Workflows. */
 
 		/* Webhooks. */
+
+		function list_subscriptions( $app_id ){
+			return $this->run( 'webhooks/v1/' . $app_id . '/subscriptions' );
+		}
+
+		function create_subscription( $app_id, $subsription_type, $property_name, $enabled = true ){
+			$subscription = array(
+				'subscriptionDetails' => array(
+					'subscriptionType' => $subscription_type,
+					'propertyName' => $property_name
+				),
+				'enabled' => $enabled
+			);
+			return $this->run( 'webhooks/v1/' . $app_id . '/subscriptions', $subscription, 'POST' );
+		}
+
+		function update_subscription( $app_id, $subscription_id, bool $enabled ){
+			return $this->run( 'webhooks/v1/' . $app_id . '/subscriptions/' . $subscription_id, array( 'enabled' => $enabled ), 'PUT' );
+		}
+
+		function delete_subscription( $app_id, $subscription_id ){
+			return $this->run( 'webhooks/v1/' . $app_id . '/subscriptions/' . $subscription_id );
+		}
+
+		function get_webhook_settings( $app_id ){
+			return $this->run( 'webhooks/v1/' . $app_id . '/settings' );
+		}
+
+		function update_settings( $app_id, $webhookUrl, $maxConcurrentRequests ){
+			$args = array(
+				'webhookUrl' => $webhookUrl,
+				'maxConcurrentRequests' => $maxConcurrentRequests
+			);
+			return $this->run( 'webhooks/v1/' . $app_id . '/settings', $args, 'PUT' );
+		}
 
 	}
 
