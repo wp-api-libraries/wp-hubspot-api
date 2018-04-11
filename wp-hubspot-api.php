@@ -587,12 +587,27 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			return $this->build_request( 'properties/v1/companies/properties' )->fetch();
 		}
 
-		function get_company_property() {
+		/**
+		 * get_company_property function.
+		 * @see https://developers.hubspot.com/docs/methods/companies/get_company_property
+		 *
+		 * @access public
+		 * @return void
+		 */
+		function get_company_property( $property_name ) {
+			return $this->build_request( 'properties/v1/companies/properties/named/' . $property_name )->fetch();
 
 		}
 
+		/**
+		 * add_company_property_group function.
+		 *
+		 * @see https://developers.hubspot.com/docs/methods/companies/create_company_property_group
+		 * @access public
+		 * @return void
+		 */
 		function add_company_property_group() {
-
+			return $this->build_request( 'properties/v1/companies/groups/' . $property_name, 'POST' )->fetch();
 		}
 
 		function update_company_property_group() {
