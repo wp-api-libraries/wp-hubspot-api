@@ -631,7 +631,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			$args = array(
 				'properties' => $properties
 			);
-			return $this->run( 'contacts/v1/contact/vid/'. $contact_id .'/profile', $args, 'POST' );
+			return $this->run( "contacts/v1/contact/vid/$contact_id/profile", $args, 'POST' );
 		}
 
 
