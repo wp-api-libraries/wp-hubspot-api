@@ -179,27 +179,15 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return HubspotAPI         $this.
 		 */
 		public function set_props( $limit = 20, $offset = null, $properties = null, $alt_args = array() ){
-			$args = $this->parse_args(array(
+			$args = array(
 				'limit' => intval( $limit ),
 				'offset' => $offset,
 				'property' => $properties
-			));
+			);
 
-			$this->args['body'] = $this->parse_args( $alt_args, $args );
+			$this->args['body'] = $this->filter_args( $alt_args, $args );
 
 			return $this;
-		}
-
-		/**
-		 * A wrapper for set_props.
-		 *
-		 * @param  integer $limit      [description]
-		 * @param  [type]  $offset     [description]
-		 * @param  [type]  $properties [description]
-		 * @return [type]              [description]
-		 */
-		public function sp( $limit = 20, $offset = null, $properties = null, $alt_args = array() ){
-			return $this->set_props( $limit, $offset, $properties, $alt_args );
 		}
 
 		/**
@@ -237,28 +225,15 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		}
 
 		/**
-		 * Takes an array of arguments, and 'parses' them for being null or not.
+		 * Takes the elements of one or more arrays, merges them together and
+		 * filters empty and null values out of the resulting array.
 		 *
-		 * Returns an array with the same keys and vals if the val is not null.
-		 *
-		 * Also optionally adds a 'merge' array, to merge into (array_merge( $merge, $results )).
-		 *
-		 * @param  [type] $args  [description]
-		 * @param  array  $merge [description]
-		 * @return [type]        [description]
+		 * @param  array  $args A variable amount of arrays to merge and filter through.
+		 * @return array        A single array of filtered args.
 		 */
-		private function parse_args( $args, $merge = array() ){
-	    $results = array();
-
-	    foreach( $args as $key => $val ){
-	      if( $val !== null ){
-	        $results[$key] = $val;
-	      }else if( is_array( $val ) && ! empty( $val ) ){
-	        $results[$key] = $val;
-	      }
-	    }
-
-	    return array_merge( $merge, $results );
+		private function filter_args( array ...$args ){
+			// Merges arrays and removes empty and null values.
+	    return array_filter( array_merge( ...$args ) );
 	  }
 
 		/* Oauth. */
@@ -275,19 +250,16 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * Calendar - List content events.
 		 *
 		 * @access public
-		 * @param mixed $start_date Start Date.
-		 * @param mixed $end_date End Date.
-		 * @param mixed $limit (default: null) Limit.
-		 * @param mixed $offset (default: null) Offset.
-		 * @param mixed $content_category (default: null) Content Category.
-		 * @param mixed $campaign_guid (default: null) Campaign GUID.
-		 * @param mixed $include_no_campaigns (default: null) Include No Compaigns.
+		 * @param string $start_date Start Date.
+		 * @param string $end_date End Date.
+		 * @param mixed  Optional args to send to request.
 		 * @return void
 		 */
-		function get_content_events( $start_date, $end_date, $limit = null, $offset = null, $content_category = null, $campaign_guid = null, $include_no_campaigns = null ) {
+		function get_content_events( $start_date, $end_date, $args = array() ) {
+			$args['startDate'] = $start_date;
+			$args['endDate'] = $end_date;
 
-			$request = 'calendar/v1/events/content';
-			return $this->run( $request );
+			return $this->run( "calendar/v1/events/content", $args );
 		}
 
 		/**
@@ -296,17 +268,13 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @access public
 		 * @param mixed $start_date Start Date.
 		 * @param mixed $end_date End Date.
-		 * @param mixed $limit (default: null) Limit.
-		 * @param mixed $offset (default: null) Offset.
-		 * @param mixed $campaign_guid (default: null) Campaign GUID.
-		 * @param mixed $include_no_campaigns (default: null) Include No Campaigns.
-		 * @return void
+		 * @param mixed $args     Optional args.
 		 */
-		function get_social_events( $start_date, $end_date, $limit = null, $offset = null, $campaign_guid = null, $include_no_campaigns = null ) {
+		function get_social_events( $start_date, $end_date,  $args = array() ) {
+			$args['startDate'] = $start_date;
+			$args['endDate'] = $end_date;
 
-			$request = 'calendar/v1/events/social';
-			return $this->run( $request );
-
+			return $this->run( "calendar/v1/events/social" , $args );
 		}
 
 		/**
@@ -315,15 +283,28 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @access public
 		 * @param mixed $start_date Start Date.
 		 * @param mixed $end_date End Date.
-		 * @param mixed $limit (default: null) Limit.
-		 * @param mixed $offset (default: null) Offset.
-		 * @param mixed $campaign_guid (default: null) Campaign GUID.
-		 * @param mixed $include_no_campaigns (default: null) Include No Campaigns.
-		 * @return void
+		 * @param mixed $args
 		 */
-		function get_task_events( $start_date, $end_date, $limit = null, $offset = null, $campaign_guid = null, $include_no_campaigns = null ) {
-			$request = 'calendar/v1/events/task';
-			return $this->run( $request );
+		function get_task_events( $start_date, $end_date, $args = array() ) {
+			$args['startDate'] = $start_date;
+			$args['endDate'] = $end_date;
+
+			return $this->run( "calendar/v1/events/task", $args );
+		}
+
+		/**
+		 * Get All Events.
+		 *
+		 * @access public
+		 * @param mixed $start_date Start Date.
+		 * @param mixed $end_date End Date.
+		 * @param mixed $args     Optional args.
+		 */
+		function get_all_events( $start_date, $end_date,  $args = array() ) {
+			$args['startDate'] = $start_date;
+			$args['endDate'] = $end_date;
+
+			return $this->run( "calendar/v1/events" , $args );
 		}
 
 		/**
@@ -332,10 +313,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @access public
 		 * @return void
 		 */
-		function create_task() {
-
-			$request = 'calendar/v1/events/task';
-			return $this->run( $request );
+		function create_task( $args ) {
+			return $this->run( "calendar/v1/events/task" , $args, 'POST');
 		}
 
 		/**
@@ -346,10 +325,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function get_task( $task_id ) {
-
-			$request = 'calendar/v1/events/task/' . $task_id . '';
-			return $this->run( $request );
-
+			return $this->run( "calendar/v1/events/task/$task_id" );
 		}
 
 		/**
@@ -359,9 +335,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @param mixed $task_id Task ID.
 		 * @return void
 		 */
-		function update_task( $task_id ) {
-			$request = 'calendar/v1/events/task/' . $task_id . '';
-			return $this->run( $request );
+		function update_task( $task_id, $args ) {
+			return $this->run( "calendar/v1/events/task/$task_id", $args, 'PUT' );
 		}
 
 		/**
@@ -372,12 +347,64 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function delete_task( $task_id ) {
-			$request = 'calendar/v1/events/task/' . $task_id . '';
-			return $this->run( $request );
+			return $this->run( "calendar/v1/events/task/$task_id", array(), 'DELETE' );
 		}
 
 		/* Companies. */
 
+		/**
+		 * Add Company.
+		 *
+		 * @access public
+		 * @return void
+		 */
+		function create_company( $properties ) {
+			if( ! isset( $properties['properties'] ) ){
+				$properties = array(
+					'properties' => $properties
+				);
+			}
+			return $this->run( 'companies/v2/companies', $properties, 'POST' );
+		}
+
+		/**
+		 * Update Company.
+		 *
+		 * @access public
+		 * @param mixed $company_id Company ID.
+		 * @return void
+		 */
+		function update_company( $company_id, $properties ) {
+			if( ! isset( $properties['properties'] ) ){
+				$properties = array(
+					'properties' => $properties
+				);
+			}
+			return $this->run( "companies/v2/companies/$company_id", $properties, 'PUT' );
+		}
+
+		/**
+		 * Update a group of Companies.
+		 *
+		 * @access public
+		 *
+		 * @param  array   Array of companies to update.
+		 * @return array
+		 */
+		function update_company_group( $batch ) {
+			return $this->run( "companies/v1/batch-async/update", $batch, 'POST' );
+		}
+
+		/**
+		 * Delete Company.
+		 *
+		 * @access public
+		 * @param mixed $company_id Company ID.
+		 * @return void
+		 */
+		function delete_company( $company_id ) {
+			return $this->run( "companies/v2/companies/$company_id", array(), 'DELETE' );
+		}
 
 		/**
 		 * Get Companies.
@@ -396,27 +423,14 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 *                                        include that property, even when you specify the property. A company
 		 *                                        without a value for the website property would not show the website
 		 *                                        property in the results, even with &properties=website in the URL.
-		 * @param string $properties_with_history Works similarly to properties=, but this parameter will include the
+		 * @param string $propertiesWithHistory   Works similarly to properties=, but this parameter will include the
 		 *                                        history for the specified property, instead of just including the current
 		 *                                        value. Use this parameter when you need the full history of changes to a
 		 *                                        property's value.
 		 * @return void
 		 */
-		function get_companies( int $limit = null, int $offset = null, $properties = null, $properties_with_history = null ) {
-			$args = array();
-
-			if ( null !== $limit ) {
-				$args['limit'] = $limit;
-			}
-			if ( null !== $offset ) {
-				$args['offset'] = $offset;
-			}
-			if ( null !== $properties ) {
-				$args['properties'] = $properties;
-			}
-			if ( null !== $properties_with_history ) {
-				$args['propertiesWithHistory'] = $properties_with_history;
-			}
+		function get_companies( int $limit = null, int $offset = null, $properties = null, $propertiesWithHistory = null ) {
+			$args = $this->filter_args( compact('limit', 'offset', 'properties', 'propertiesWithHistory' ) );
 
 			return $this->build_request( 'companies/v2/companies/paged', $args )->fetch();
 		}
@@ -455,8 +469,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function get_company_by_domain( $domain ) {
-			$request = 'companies/v2/companies/domain/' . $domain . '';
-			return $this->run( $request );
+			return $this->run( "companies/v2/companies/domain/$domain" );
 		}
 
 		/**
@@ -467,8 +480,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function get_company( $company_id ) {
-			$request = 'companies/v2/companies/' . $company_id . '';
-			return $this->run( $request );
+			return $this->run( "companies/v2/companies/$company_id" );
 		}
 
 		/**
@@ -481,8 +493,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function get_company_contacts( $company_id, $vidoffset = '', $count = '' ) {
-			$request = 'companies/v2/companies/' . $company_id . '/contacts';
-			return $this->run( $request );
+			return $this->run( "companies/v2/companies/$company_id/contacts" );
 		}
 
 		/**
@@ -495,24 +506,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function get_company_contacts_ids( $company_id, $vidoffset = '', $count = '' ) {
-			$request = 'companies/v2/companies/' . $company_id . '/vids';
-			return $this->run( $request );
-		}
-
-
-		/**
-		 * Add Company.
-		 *
-		 * @access public
-		 * @return void
-		 */
-		function create_company( $properties ) {
-			if( ! isset( $properties['properties'] ) ){
-				$properties = array(
-					'properties' => $properties
-				);
-			}
-			return $this->run( 'companies/v2/companies', $properties, 'POST' );
+			return $this->run( "companies/v2/companies/$company_id/vids" );
 		}
 
 		/**
@@ -524,32 +518,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function add_contact_to_company( $company_id, $contact_vid ) {
-			$request = 'engagements/v1/engagements/' . $company_id . '/associations/contact/' . $contact_vid . '';
-			return $this->run( $request );
-		}
-
-		/**
-		 * Update Company.
-		 *
-		 * @access public
-		 * @param mixed $company_id Company ID.
-		 * @return void
-		 */
-		function update_company( $company_id ) {
-			$request = 'companies/v2/companies/' . $company_id . '';
-			return $this->run( $request );
-		}
-
-		/**
-		 * Delete Company.
-		 *
-		 * @access public
-		 * @param mixed $company_id Company ID.
-		 * @return void
-		 */
-		function delete_company( $company_id ) {
-			$request = 'companies/v2/companies/' . $company_id . '';
-			return $this->run( $request );
+			return $this->run( "engagements/v1/engagements/$company_id/associations/contact/$contact_vid" );
 		}
 
 		/**
@@ -561,24 +530,10 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function remove_contact_from_company( $company_id, $contact_vid ) {
-			$request = 'companies/v2/companies/' . $company_id . '/contacts/' . $contact_vid . '';
-			return $this->run( $request );
+			return $this->run( "companies/v2/companies/$company_id/contacts/$contact_vid", array(), 'DELETE' );
 		}
 
 		/* Companies Properties. */
-
-		function add_company_property() {
-
-		}
-
-		function update_company_property() {
-
-		}
-
-		function delete_company_property() {
-
-		}
-
 		/**
 		 * Get all Company Properties.
 		 *
@@ -589,7 +544,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return array A list of company properties.
 		 */
 		function get_all_company_properties() {
-			return $this->build_request( 'properties/v1/companies/properties' )->fetch();
+			return $this->run( "properties/v1/companies/properties" );
 		}
 
 		/**
@@ -599,9 +554,25 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @access public
 		 * @return void
 		 */
-		function get_company_property( $property_name ) {
-			return $this->build_request( 'properties/v1/companies/properties/named/' . $property_name )->fetch();
+		public function get_company_property( string $property_name ){
+			return $this->run( "properties/v1/companies/properties/named/$property_name" );
 
+		}
+
+		function add_company_property( $args ) {
+			return $this->run( "properties/v1/companies/properties", $args, 'POST' );
+		}
+
+		function update_company_property( $args ) {
+			return $this->run( "properties/v1/companies/properties", $args, 'PUT' );
+		}
+
+		function delete_company_property( $property_name ) {
+			return $this->run( "properties/v1/companies/properties/named/$property_name", array(), 'DELETE' );
+		}
+
+		function get_company_property_groups( $include_properties = null ) {
+			return $this->run( "properties/v1/companies/groups", $this->filter_args( array( 'includeProperties' => $include_properties ) ) );
 		}
 
 		/**
@@ -611,20 +582,22 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @access public
 		 * @return void
 		 */
-		function add_company_property_group() {
-			return $this->build_request( 'properties/v1/companies/groups/' . $property_name, 'POST' )->fetch();
+		function add_company_property_group( $name, $display_name, int $display_order = null ) {
+			$args = $this->filter_args( array(
+				'name' => $name,
+				'displayName' => $display_name,
+				'displayOrder' => $display_order
+			));
+
+			return $this->build_request( "properties/v1/companies/groups/", $args, 'POST' )->fetch();
 		}
 
-		function update_company_property_group() {
-
+		function update_company_property_group( $name, $args ) {
+			return $this->build_request( "properties/v1/companies/groups/named/$name", $args, 'PUT' )->fetch();
 		}
 
-		function delete_company_property_group() {
-
-		}
-
-		function get_company_property_groups() {
-
+		function delete_company_property_group( $name, $args ) {
+			return $this->build_request( "properties/v1/companies/groups/named/$name", array(), 'DELETE' )->fetch();
 		}
 
 		/* Contacts. */
@@ -733,7 +706,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 */
 		function get_all_contacts( int $count = null, int $contact_offset = null, $property = null, string $property_mode = null, string $form_submit_mode = null, bool $list_memberships = null ) {
 
-			$args = $this->parse_args(array(
+			$args = $this->filter_args(array(
 				'count' => $count,
 				'vidOffset' => $contact_offset,
 				'property' => $property,
