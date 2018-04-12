@@ -288,6 +288,21 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		}
 
 		/**
+		 * Get All Events.
+		 *
+		 * @access public
+		 * @param mixed $start_date Start Date.
+		 * @param mixed $end_date End Date.
+		 * @param mixed $args     Optional args.
+		 */
+		function get_all_events( $start_date, $end_date,  $args = array() ) {
+			$args['startDate'] = $start_date;
+			$args['endDate'] = $end_date;
+
+			return $this->run( "calendar/v1/events" , $args );
+		}
+
+		/**
 		 * Create Task.
 		 *
 		 * @access public
@@ -514,19 +529,6 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		}
 
 		/* Companies Properties. */
-
-		function add_company_property() {
-
-		}
-
-		function update_company_property() {
-
-		}
-
-		function delete_company_property() {
-
-		}
-
 		/**
 		 * Get all Company Properties.
 		 *
@@ -537,7 +539,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return array A list of company properties.
 		 */
 		function get_all_company_properties() {
-			return $this->build_request( 'properties/v1/companies/properties' )->fetch();
+			return $this->run( "properties/v1/companies/properties" );
 		}
 
 		/**
@@ -547,9 +549,25 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @access public
 		 * @return void
 		 */
-		function get_company_property( $property_name ) {
-			return $this->build_request( 'properties/v1/companies/properties/named/' . $property_name )->fetch();
+		public function get_company_property( string $property_name ){
+			return $this->run( "properties/v1/companies/properties/named/$property_name" );
 
+		}
+
+		function add_company_property( $args ) {
+			return $this->run( "properties/v1/companies/properties", $args, 'POST' );
+		}
+
+		function update_company_property( $args ) {
+			return $this->run( "properties/v1/companies/properties", $args, 'PUT' );
+		}
+
+		function delete_company_property( $property_name ) {
+			return $this->run( "properties/v1/companies/properties/named/$property_name", array(), 'DELETE' );
+		}
+
+		function get_company_property_groups( $include_properties = null ) {
+			return $this->run( "properties/v1/companies/groups", $this->filter_args( array( 'includeProperties' => $include_properties ) ) );
 		}
 
 		/**
@@ -559,20 +577,22 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @access public
 		 * @return void
 		 */
-		function add_company_property_group() {
-			return $this->build_request( 'properties/v1/companies/groups/' . $property_name, 'POST' )->fetch();
+		function add_company_property_group( $name, $display_name, int $display_order = null ) {
+			$args = $this->filter_args( array(
+				'name' => $name,
+				'displayName' => $display_name,
+				'displayOrder' => $display_order
+			));
+
+			return $this->build_request( "properties/v1/companies/groups/", $args, 'POST' )->fetch();
 		}
 
-		function update_company_property_group() {
-
+		function update_company_property_group( $name, $args ) {
+			return $this->build_request( "properties/v1/companies/groups/named/$name", $args, 'PUT' )->fetch();
 		}
 
-		function delete_company_property_group() {
-
-		}
-
-		function get_company_property_groups() {
-
+		function delete_company_property_group( $name, $args ) {
+			return $this->build_request( "properties/v1/companies/groups/named/$name", array(), 'DELETE' )->fetch();
 		}
 
 		/* Contacts. */
