@@ -245,19 +245,16 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * Calendar - List content events.
 		 *
 		 * @access public
-		 * @param mixed $start_date Start Date.
-		 * @param mixed $end_date End Date.
-		 * @param mixed $limit (default: null) Limit.
-		 * @param mixed $offset (default: null) Offset.
-		 * @param mixed $content_category (default: null) Content Category.
-		 * @param mixed $campaign_guid (default: null) Campaign GUID.
-		 * @param mixed $include_no_campaigns (default: null) Include No Compaigns.
+		 * @param string $start_date Start Date.
+		 * @param string $end_date End Date.
+		 * @param mixed  Optional args to send to request.
 		 * @return void
 		 */
-		function get_content_events( $start_date, $end_date, $limit = null, $offset = null, $content_category = null, $campaign_guid = null, $include_no_campaigns = null ) {
+		function get_content_events( $start_date, $end_date, $args = array() ) {
+			$args['startDate'] = $start_date;
+			$args['endDate'] = $end_date;
 
-			$request = 'calendar/v1/events/content';
-			return $this->run( $request );
+			return $this->run( "calendar/v1/events/content", $args );
 		}
 
 		/**
@@ -266,17 +263,13 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @access public
 		 * @param mixed $start_date Start Date.
 		 * @param mixed $end_date End Date.
-		 * @param mixed $limit (default: null) Limit.
-		 * @param mixed $offset (default: null) Offset.
-		 * @param mixed $campaign_guid (default: null) Campaign GUID.
-		 * @param mixed $include_no_campaigns (default: null) Include No Campaigns.
-		 * @return void
+		 * @param mixed $args     Optional args.
 		 */
-		function get_social_events( $start_date, $end_date, $limit = null, $offset = null, $campaign_guid = null, $include_no_campaigns = null ) {
+		function get_social_events( $start_date, $end_date,  $args = array() ) {
+			$args['startDate'] = $start_date;
+			$args['endDate'] = $end_date;
 
-			$request = 'calendar/v1/events/social';
-			return $this->run( $request );
-
+			return $this->run( "calendar/v1/events/social" , $args );
 		}
 
 		/**
@@ -285,15 +278,13 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @access public
 		 * @param mixed $start_date Start Date.
 		 * @param mixed $end_date End Date.
-		 * @param mixed $limit (default: null) Limit.
-		 * @param mixed $offset (default: null) Offset.
-		 * @param mixed $campaign_guid (default: null) Campaign GUID.
-		 * @param mixed $include_no_campaigns (default: null) Include No Campaigns.
-		 * @return void
+		 * @param mixed $args
 		 */
-		function get_task_events( $start_date, $end_date, $limit = null, $offset = null, $campaign_guid = null, $include_no_campaigns = null ) {
-			$request = 'calendar/v1/events/task';
-			return $this->run( $request );
+		function get_task_events( $start_date, $end_date, $args = array() ) {
+			$args['startDate'] = $start_date;
+			$args['endDate'] = $end_date;
+
+			return $this->run( "calendar/v1/events/task", $args );
 		}
 
 		/**
@@ -302,10 +293,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @access public
 		 * @return void
 		 */
-		function create_task() {
-
-			$request = 'calendar/v1/events/task';
-			return $this->run( $request );
+		function create_task( $args ) {
+			return $this->run( "calendar/v1/events/task" , $args, 'POST');
 		}
 
 		/**
@@ -316,10 +305,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function get_task( $task_id ) {
-
-			$request = 'calendar/v1/events/task/' . $task_id . '';
-			return $this->run( $request );
-
+			return $this->run( "calendar/v1/events/task/$task_id" );
 		}
 
 		/**
@@ -329,9 +315,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @param mixed $task_id Task ID.
 		 * @return void
 		 */
-		function update_task( $task_id ) {
-			$request = 'calendar/v1/events/task/' . $task_id . '';
-			return $this->run( $request );
+		function update_task( $task_id, $args ) {
+			return $this->run( "calendar/v1/events/task/$task_id", $args, 'PUT' );
 		}
 
 		/**
@@ -342,8 +327,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function delete_task( $task_id ) {
-			$request = 'calendar/v1/events/task/' . $task_id . '';
-			return $this->run( $request );
+			return $this->run( "calendar/v1/events/task/$task_id", array(), 'DELETE' );
 		}
 
 		/* Companies. */
@@ -383,11 +367,12 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * Update a group of Companies.
 		 *
 		 * @access public
-		 * @param mixed $company_id Company ID.
-		 * @return void
+		 *
+		 * @param  array   Array of companies to update.
+		 * @return array
 		 */
-		function update_company_group( $company_id, $batch ) {
-			return $this->run( "companies/v1/batch-async/update", $batch, 'PUT' );
+		function update_company_group( $batch ) {
+			return $this->run( "companies/v1/batch-async/update", $batch, 'POST' );
 		}
 
 		/**
