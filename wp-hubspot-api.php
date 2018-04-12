@@ -263,6 +263,11 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 
 		/* Oauth. */
 
+		/* Daily Usage */
+
+		function check_daily_usage(){
+			return $this->run( 'integrations/v1/limit/daily' );
+		}
 
 		/* Calendar. */
 
