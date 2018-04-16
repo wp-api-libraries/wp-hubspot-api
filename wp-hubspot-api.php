@@ -190,6 +190,10 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			return $this;
 		}
 
+		public function sp( $limit = 20, $offset = null, $properties = null, $alt_args = array() ){
+			return $this->set_props( $limit, $offset, $properties, $alt_args );
+		}
+
 		/**
 		 * Set request headers.
 		 */
