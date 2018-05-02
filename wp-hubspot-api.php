@@ -647,9 +647,11 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @param mixed $email
 		 * @return void
 		 */
-		function create_or_update_contact( $email ) {
-			$request = 'contacts/v1/contact/createOrUpdate/email/' . $email . '/';
-			return $this->run( $request );
+		function create_or_update_contact( $email, $properties ) {
+			$args = array(
+				'properties' => $properties
+			);
+			return $this->run( "contacts/v1/contact/createOrUpdate/email/$email", $args, 'POST' );
 		}
 
 		/**
@@ -658,13 +660,12 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @access public
 		 * @return void
 		 */
-		function create_or_update_batch_contacts() {
-			$request = 'contacts/v1/contact/batch/';
-			return $this->run( $request );
+		function create_or_update_batch_contacts( $batch ) {
+			return $this->run( "contacts/v1/contact/batch/", $batch );
 		}
 
-		function delete_contact() {
-			// https://api.hubapi.com/contacts/v1/contact/vid/61571?hapikey=demo
+		function delete_contact($contact_id) {
+			return $this->run( "/contacts/v1/contact/vid/$contact_id", array(), 'DELETE' );
 		}
 
 		/**
@@ -716,46 +717,6 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			));
 
 			return $this->run( 'contacts/v1/lists/all/contacts/all', $args );
-		}
-
-		/**
-		 * Get a single contact, by visitor_id (vid).
-		 *
-		 * $args supports additional all optional properties:
-		 *   Property
-		 *     Used in the request URL	By default, you will get all properties that
-		 *     the contact has values for. If you include the "property" parameter,
-		 *     then the returned data will only include the property or properties
-		 *     that you request. You can include this parameter multiple times to
-		 *     specify multiple properties. The lastmodifieddate and associatedcompanyid
-		 *     will always be included, even if not specified. Keep in mind that only
-		 *     properties that have a value will be included in the response, even if
-		 *     specified in the URL.
-		 *
-		 *     For our purposes, we accept both a string or an array of values under
-		 *     the key 'property'. ie: 'property' => 'imforza_user_id' or
-		 *     'property' => array( 'imforza_user_id', 'lastname', 'firstname' ).
-		 *   Property Mode
-		 *     One of “value_only” or “value_and_history” to specify if the current
-		 *     value for a property should be fetched, or the value and all the
-		 *     historical values for that property. Default is “value_and_history”.
-		 *   Form Submission Mode
-		 *     One of “all”, “none”, “newest”, “oldest” to specify which form submissions
-		 *     should be fetched. Default is “all”.
-		 *   List Memberships
-		 *     Boolean "true" or "false" to indicate whether current list memberships
-		 *     should be fetched for the contact. Default is true.
-		 *
-		 * @param  [type] $contact_id [description]
-		 * @param  array  $args       [description]
-		 * @return [type]             [description]
-		 */
-		function get_contact( $contact_id, $args = array() ) {
-			return $this->run( 'contacts/v1/contact/vid/' . $contact_id . '/profile', $args );
-		}
-
-		function get_contact_by_email( $contact_email ) {
-			return $this->run( 'contacts/v1/contact/email/' . $contact_email . '/profile' );
 		}
 
 		/**
@@ -814,28 +775,132 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @param  array  $args [description]
 		 * @return [type]       [description]
 		 */
-		function get_recent_contacts( $args = array() ) {
+		function get_recent_updated_contacts( $args = array() ) {
 			return $this->run( 'contacts/v1/lists/recently_updated/contacts/recent', $args );
 		}
 
-		function get_contact_by_token( $contact_token ) {
-			// http://api.hubapi.com/contacts/v1/contact/utk/f844d2217850188692f2610c717c2e9b/profile?hapikey=demo
+		public function get_recent_created_contacts( $args = array() ){
+			return $this->run( '/contacts/v1/lists/all/contacts/recent', $args );
 		}
 
-		function get_batch_contacts_by_token() {
-			// https://api.hubapi.com/contacts/v1/contact/utks/batch/?utk=f844d2217850188692f2610c717c2e9b&utk=j94344d22178501692f2610c717c2e9b&hapikey=demo
+
+		/**
+		 * Get a single contact, by visitor_id (vid).
+		 *
+		 * $args supports additional all optional properties:
+		 *   Property
+		 *     Used in the request URL	By default, you will get all properties that
+		 *     the contact has values for. If you include the "property" parameter,
+		 *     then the returned data will only include the property or properties
+		 *     that you request. You can include this parameter multiple times to
+		 *     specify multiple properties. The lastmodifieddate and associatedcompanyid
+		 *     will always be included, even if not specified. Keep in mind that only
+		 *     properties that have a value will be included in the response, even if
+		 *     specified in the URL.
+		 *
+		 *     For our purposes, we accept both a string or an array of values under
+		 *     the key 'property'. ie: 'property' => 'imforza_user_id' or
+		 *     'property' => array( 'imforza_user_id', 'lastname', 'firstname' ).
+		 *   Property Mode
+		 *     One of “value_only” or “value_and_history” to specify if the current
+		 *     value for a property should be fetched, or the value and all the
+		 *     historical values for that property. Default is “value_and_history”.
+		 *   Form Submission Mode
+		 *     One of “all”, “none”, “newest”, “oldest” to specify which form submissions
+		 *     should be fetched. Default is “all”.
+		 *   List Memberships
+		 *     Boolean "true" or "false" to indicate whether current list memberships
+		 *     should be fetched for the contact. Default is true.
+		 *
+		 * @param  [type] $contact_id [description]
+		 * @param  array  $args       [description]
+		 * @return [type]             [description]
+		 */
+		function get_contact( $contact_id, $args = array() ) {
+			return $this->run( 'contacts/v1/contact/vid/' . $contact_id . '/profile', $args );
 		}
 
-		function search_contacts( $search_query ) {
-			return $this->run( 'contacts/v1/search/query', array( 'q' => $search_query ) );
-			// https://api.hubapi.com/contacts/v1/search/query?q=testingapis&hapikey=demo
+		function get_contact_by_email( $contact_email, $args = array() ) {
+			return $this->run( 'contacts/v1/contact/email/' . $contact_email . '/profile' );
+		}
+
+		public function get_contact_batch_by_email( $emails, $args = array() ){
+			$args['email'] = $emails;
+			return $this->run( '/contacts/v1/contact/emails/batch/', $args );
+		}
+
+
+
+		function get_contact_by_token( $contact_token , $args = array() ){
+			return $this->run( "/contacts/v1/contact/utk/$contact_token/profile", $args );
+		}
+
+		function search_contacts( $search_query, $args = array() ) {
+			$args['q'] = $search_query;
+			return $this->run( 'contacts/v1/search/query', $args );
 		}
 
 		function merge_contacts( $contact_id, $vid_to_merge ) {
-			// https://api.hubapi.com/contacts/v1/contact/merge-vids/1343724/?hapikey=demo
+			$args = array(
+				'vidToMerge' => $vid_to_merge
+			);
+
+			return $this->run( "/contacts/v1/contact/merge-vids/$contact_id/", $args, 'POST' );
 		}
 
 		/* Contact Lists. */
+
+		public function create_contact_list( $name, $args = array() ){
+			$args['name'] = $name;
+			return $this->run( "/contacts/v1/lists", $args, 'POST' );
+		}
+
+		public function get_contact_lists( $args = array() ){
+			return $this->run( "/contacts/v1/lists", $args, 'POST' );
+		}
+
+		public function get_contact_list( $list_id ){
+			return $this->run( "/contacts/v1/lists/$list_id" );
+		}
+
+		public function update_contact_list( $list_id, $args ){
+			return $this->run( "/contacts/v1/lists/$list_id", $args, 'POST' );
+		}
+
+		public function delete_contact_list( $list_id ){
+			return $this->run( "/contacts/v1/lists/$list_id", array(), 'DELETE' );
+		}
+
+
+		public function get_batch_contact_lists( array $list_ids ){
+			$args = array(
+				'listId' => $list_ids
+			);
+			return $this->run( "/contacts/v1/lists/$list_id", $args );
+		}
+
+		public function get_static_contact_lists(){
+
+		}
+
+		public function get_dynamic_contact_lists(){
+		}
+
+		public function get_contacts_in_list(){
+
+		}
+
+		public function get_recent_contacts_in_list(){
+
+		}
+
+		public function add_contact_to_list(){
+
+		}
+
+		public function delete_contact_from_list(){
+
+		}
 
 		/* Content Properties. */
 
