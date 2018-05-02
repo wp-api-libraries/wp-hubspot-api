@@ -149,6 +149,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			// Make the request.
 			// pp( $this->base_uri . $this->route, $this->args );
 			$response = wp_remote_request( $this->base_uri . $this->route, $this->args );
+			// pp( $this->base_uri . $this->route, $response );
 
 			// Retrieve Status code & body.
 			$code = wp_remote_retrieve_response_code( $response );
@@ -188,6 +189,10 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			$this->args['body'] = $this->filter_args( $alt_args, $args );
 
 			return $this;
+		}
+
+		public function sp( $limit = 20, $offset = null, $properties = null, $alt_args = array() ){
+			return $this->set_props( $limit, $offset, $properties, $alt_args );
 		}
 
 		/**
@@ -237,6 +242,27 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 	  }
 
 		/* Oauth. */
+
+		function get_oauth_access_token( string $client_id, string $client_secret, string $redirect_uri, string $code ){
+			$this->build_request( 'oauth/v1/token', array(), 'POST' );
+
+			$args = array(
+				'grant_type'    => 'authorization_code',
+				'client_id'     => $client_id,
+				'client_secret' => $client_secret,
+				'redirect_uri'  => $redirect_uri,
+				'code'          => $code
+			);
+
+			$this->args['headers']['Content-Type'] = 'application/x-www-form-urlencoded';
+			$this->args['body'] = $args;
+
+			return $this->fetch();
+		}
+
+		function get_oauth_token_info( string $token ){
+			return $this->run( 'oauth/v1/access-tokens/' . $token );
+		}
 
 		/* Daily Usage */
 
