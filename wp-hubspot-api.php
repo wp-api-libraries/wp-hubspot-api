@@ -81,7 +81,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function __construct( $api_key = null, $oauth_token = null ) {
-			static::$api_key     = $api_key;
+			static::$api_key = $api_key;
 			static::$oauth_token = $oauth_token;
 		}
 
@@ -179,9 +179,9 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @param [type]  $properties [description]
 		 * @return HubspotAPI         $this.
 		 */
-		public function set_props( $limit = 20, $offset = null, $properties = null, $alt_args = array() ){
+		public function set_props( $count = 20, $offset = null, $properties = null, $alt_args = array() ){
 			$args = array(
-				'limit' => intval( $limit ),
+				'count' => intval( $count ),
 				'offset' => $offset,
 				'property' => $properties
 			);
@@ -191,8 +191,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			return $this;
 		}
 
-		public function sp( $limit = 20, $offset = null, $properties = null, $alt_args = array() ){
-			return $this->set_props( $limit, $offset, $properties, $alt_args );
+		public function sp( $count = 20, $offset = null, $properties = null, $alt_args = array() ){
+			return $this->set_props( $count, $offset, $properties, $alt_args );
 		}
 
 		/**
