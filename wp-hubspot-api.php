@@ -946,6 +946,38 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 
 		}
 
+		/* TODO: move */
+
+		function list_all_file_metadata( $args = array() ){
+			return $this->run( 'filemanager/api/v2/files', $args );
+		}
+
+		function list_file_metadata( $file_id ){
+			return $this->run( 'filemanager/api/v2/files/' . $file_id );
+		}
+
+		function hard_delete_file( $file_id ){
+			return $this->run( 'filemanager/api/v2/files/' . $file_id . '/full-delete', array(), 'POST' );
+		}
+
+		/* Engagements. */
+
+		function list_engagements( $offset = null, $limit = 100 ){
+			$args = array(
+				'limit' => $limit
+			);
+
+			if( $offset ){
+				$args['offset'] = $offset;
+			}
+
+			return $this->run( 'engagements/v1/engagements/paged', $args );
+		}
+
+		function list_associated_engagements( $object_type, $object_id ){
+			return $this->run( "engagements/v1/engagements/associated/$object_type/$object_id/paged" );
+		}
+
 		/* Keywords. */
 
 
