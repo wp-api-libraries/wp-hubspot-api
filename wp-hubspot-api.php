@@ -1104,8 +1104,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @param mixed $pipeline_id Pipeline ID.
 		 * @return void
 		 */
-		function get_deal_pipelines( $pipeline_id ) {
-
+		function show_deal_pipeline( $pipeline_id ) {
+			return $this->run( 'deals/v1/pipelines/' . $pipeline_id );
 		}
 
 		/**
@@ -1114,11 +1114,11 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @access public
 		 * @return void
 		 */
-		function get_all_deal_pipelines() {
-
+		function list_deal_pipelines() {
+			return $this->run( 'deals/v1/pipelines' );
 		}
 
-		function add_deal_pipeline() {
+		function create_deal_pipeline() {
 
 		}
 
@@ -1382,7 +1382,6 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		function get_ticket_changes( array $args = array() ){
 			return $this->run( 'crm-objects/v1/change-log/tickets', $args );
 		}
-
 
 		/* Timeline. */
 
