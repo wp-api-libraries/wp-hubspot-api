@@ -191,6 +191,16 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			return $this;
 		}
 
+		/**
+		 * sp function.
+		 *
+		 * @access public
+		 * @param int $count (default: 20)
+		 * @param mixed $offset (default: null)
+		 * @param mixed $properties (default: null)
+		 * @param array $alt_args (default: array())
+		 * @return void
+		 */
 		public function sp( $count = 20, $offset = null, $properties = null, $alt_args = array() ){
 			return $this->set_props( $count, $offset, $properties, $alt_args );
 		}
@@ -585,18 +595,46 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 
 		}
 
+		/**
+		 * add_company_property function.
+		 *
+		 * @access public
+		 * @param mixed $args
+		 * @return void
+		 */
 		function add_company_property( $args ) {
 			return $this->run( "properties/v1/companies/properties", $args, 'POST' );
 		}
 
+		/**
+		 * update_company_property function.
+		 *
+		 * @access public
+		 * @param mixed $args
+		 * @return void
+		 */
 		function update_company_property( $args ) {
 			return $this->run( "properties/v1/companies/properties", $args, 'PUT' );
 		}
 
+		/**
+		 * delete_company_property function.
+		 *
+		 * @access public
+		 * @param mixed $property_name
+		 * @return void
+		 */
 		function delete_company_property( $property_name ) {
 			return $this->run( "properties/v1/companies/properties/named/$property_name", array(), 'DELETE' );
 		}
 
+		/**
+		 * get_company_property_groups function.
+		 *
+		 * @access public
+		 * @param mixed $include_properties (default: null)
+		 * @return void
+		 */
 		function get_company_property_groups( $include_properties = null ) {
 			return $this->run( "properties/v1/companies/groups", $this->filter_args( array( 'includeProperties' => $include_properties ) ) );
 		}
@@ -618,10 +656,26 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			return $this->build_request( "properties/v1/companies/groups/", $args, 'POST' )->fetch();
 		}
 
+		/**
+		 * update_company_property_group function.
+		 *
+		 * @access public
+		 * @param mixed $name
+		 * @param mixed $args
+		 * @return void
+		 */
 		function update_company_property_group( $name, $args ) {
 			return $this->build_request( "properties/v1/companies/groups/named/$name", $args, 'PUT' )->fetch();
 		}
 
+		/**
+		 * delete_company_property_group function.
+		 *
+		 * @access public
+		 * @param mixed $name
+		 * @param mixed $args
+		 * @return void
+		 */
 		function delete_company_property_group( $name, $args ) {
 			return $this->build_request( "properties/v1/companies/groups/named/$name", array(), 'DELETE' )->fetch();
 		}
@@ -690,7 +744,14 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			return $this->run( "contacts/v1/contact/batch/", $batch );
 		}
 
-		function delete_contact($contact_id) {
+		/**
+		 * delete_contact function.
+		 *
+		 * @access public
+		 * @param mixed $contact_id
+		 * @return void
+		 */
+		function delete_contact( $contact_id ) {
 			return $this->run( "/contacts/v1/contact/vid/$contact_id", array(), 'DELETE' );
 		}
 
@@ -805,6 +866,13 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			return $this->run( 'contacts/v1/lists/recently_updated/contacts/recent', $args );
 		}
 
+		/**
+		 * get_recent_created_contacts function.
+		 *
+		 * @access public
+		 * @param array $args (default: array())
+		 * @return void
+		 */
 		public function get_recent_created_contacts( $args = array() ){
 			return $this->run( '/contacts/v1/lists/all/contacts/recent', $args );
 		}
@@ -846,10 +914,26 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			return $this->run( 'contacts/v1/contact/vid/' . $contact_id . '/profile', $args );
 		}
 
+		/**
+		 * get_contact_by_email function.
+		 *
+		 * @access public
+		 * @param mixed $contact_email
+		 * @param array $args (default: array())
+		 * @return void
+		 */
 		function get_contact_by_email( $contact_email, $args = array() ) {
 			return $this->run( 'contacts/v1/contact/email/' . $contact_email . '/profile' );
 		}
 
+		/**
+		 * get_contact_batch_by_email function.
+		 *
+		 * @access public
+		 * @param mixed $emails
+		 * @param array $args (default: array())
+		 * @return void
+		 */
 		public function get_contact_batch_by_email( $emails, $args = array() ){
 			$args['email'] = $emails;
 			return $this->run( '/contacts/v1/contact/emails/batch/', $args );
@@ -857,15 +941,39 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 
 
 
+		/**
+		 * get_contact_by_token function.
+		 *
+		 * @access public
+		 * @param mixed $contact_token
+		 * @param array $args (default: array())
+		 * @return void
+		 */
 		function get_contact_by_token( $contact_token , $args = array() ){
 			return $this->run( "/contacts/v1/contact/utk/$contact_token/profile", $args );
 		}
 
+		/**
+		 * search_contacts function.
+		 *
+		 * @access public
+		 * @param mixed $search_query
+		 * @param array $args (default: array())
+		 * @return void
+		 */
 		function search_contacts( $search_query, $args = array() ) {
 			$args['q'] = $search_query;
 			return $this->run( 'contacts/v1/search/query', $args );
 		}
 
+		/**
+		 * merge_contacts function.
+		 *
+		 * @access public
+		 * @param mixed $contact_id
+		 * @param mixed $vid_to_merge
+		 * @return void
+		 */
 		function merge_contacts( $contact_id, $vid_to_merge ) {
 			$args = array(
 				'vidToMerge' => $vid_to_merge
@@ -876,28 +984,72 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 
 		/* Contact Lists. */
 
+		/**
+		 * create_contact_list function.
+		 *
+		 * @access public
+		 * @param mixed $name
+		 * @param array $args (default: array())
+		 * @return void
+		 */
 		public function create_contact_list( $name, $args = array() ){
 			$args['name'] = $name;
 			return $this->run( "/contacts/v1/lists", $args, 'POST' );
 		}
 
+		/**
+		 * get_contact_lists function.
+		 *
+		 * @access public
+		 * @param array $args (default: array())
+		 * @return void
+		 */
 		public function get_contact_lists( $args = array() ){
 			return $this->run( "/contacts/v1/lists", $args, 'POST' );
 		}
 
+		/**
+		 * get_contact_list function.
+		 *
+		 * @access public
+		 * @param mixed $list_id
+		 * @return void
+		 */
 		public function get_contact_list( $list_id ){
 			return $this->run( "/contacts/v1/lists/$list_id" );
 		}
 
+		/**
+		 * update_contact_list function.
+		 *
+		 * @access public
+		 * @param mixed $list_id
+		 * @param mixed $args
+		 * @return void
+		 */
 		public function update_contact_list( $list_id, $args ){
 			return $this->run( "/contacts/v1/lists/$list_id", $args, 'POST' );
 		}
 
+		/**
+		 * delete_contact_list function.
+		 *
+		 * @access public
+		 * @param mixed $list_id
+		 * @return void
+		 */
 		public function delete_contact_list( $list_id ){
 			return $this->run( "/contacts/v1/lists/$list_id", array(), 'DELETE' );
 		}
 
 
+		/**
+		 * get_batch_contact_lists function.
+		 *
+		 * @access public
+		 * @param array $list_ids
+		 * @return void
+		 */
 		public function get_batch_contact_lists( array $list_ids ){
 			$args = array(
 				'listId' => $list_ids
@@ -948,20 +1100,49 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 
 		/* TODO: move */
 
+		/**
+		 * list_all_file_metadata function.
+		 *
+		 * @access public
+		 * @param array $args (default: array())
+		 * @return void
+		 */
 		function list_all_file_metadata( $args = array() ){
 			return $this->run( 'filemanager/api/v2/files', $args );
 		}
 
+		/**
+		 * list_file_metadata function.
+		 *
+		 * @access public
+		 * @param mixed $file_id
+		 * @return void
+		 */
 		function list_file_metadata( $file_id ){
 			return $this->run( 'filemanager/api/v2/files/' . $file_id );
 		}
 
+		/**
+		 * hard_delete_file function.
+		 *
+		 * @access public
+		 * @param mixed $file_id
+		 * @return void
+		 */
 		function hard_delete_file( $file_id ){
 			return $this->run( 'filemanager/api/v2/files/' . $file_id . '/full-delete', array(), 'POST' );
 		}
 
 		/* Engagements. */
 
+		/**
+		 * list_engagements function.
+		 *
+		 * @access public
+		 * @param mixed $offset (default: null)
+		 * @param int $limit (default: 100)
+		 * @return void
+		 */
 		function list_engagements( $offset = null, $limit = 100 ){
 			$args = array(
 				'limit' => $limit
@@ -974,6 +1155,14 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			return $this->run( 'engagements/v1/engagements/paged', $args );
 		}
 
+		/**
+		 * list_associated_engagements function.
+		 *
+		 * @access public
+		 * @param mixed $object_type
+		 * @param mixed $object_id
+		 * @return void
+		 */
 		function list_associated_engagements( $object_type, $object_id ){
 			return $this->run( "engagements/v1/engagements/associated/$object_type/$object_id/paged" );
 		}
@@ -1219,6 +1408,15 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			return $this->run( 'crm-objects/v1/objects/tickets/' . $ticket_id, $args );
 		}
 
+		/**
+		 * show_tickets function.
+		 *
+		 * @access public
+		 * @param mixed $ticket_ids
+		 * @param array $properties (default: array())
+		 * @param bool $deleted (default: false)
+		 * @return void
+		 */
 		function show_tickets( $ticket_ids, $properties = array(), $deleted = false ){
 			if( gettype( $ticket_ids ) == 'string' ){
 				$ticket_ids = explode( ',', $ticket_ids );
@@ -1472,10 +1670,27 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 
 		/* Webhooks. */
 
+		/**
+		 * list_subscriptions function.
+		 *
+		 * @access public
+		 * @param mixed $app_id
+		 * @return void
+		 */
 		function list_subscriptions( $app_id ){
 			return $this->run( 'webhooks/v1/' . $app_id . '/subscriptions' );
 		}
 
+		/**
+		 * create_subscription function.
+		 *
+		 * @access public
+		 * @param mixed $app_id
+		 * @param mixed $subsription_type
+		 * @param mixed $property_name
+		 * @param bool $enabled (default: true)
+		 * @return void
+		 */
 		function create_subscription( $app_id, $subsription_type, $property_name, $enabled = true ){
 			$subscription = array(
 				'subscriptionDetails' => array(
@@ -1487,24 +1702,75 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			return $this->run( 'webhooks/v1/' . $app_id . '/subscriptions', $subscription, 'POST' );
 		}
 
+		/**
+		 * update_subscription function.
+		 *
+		 * @access public
+		 * @param mixed $app_id
+		 * @param mixed $subscription_id
+		 * @param bool $enabled
+		 * @return void
+		 */
 		function update_subscription( $app_id, $subscription_id, bool $enabled ){
 			return $this->run( 'webhooks/v1/' . $app_id . '/subscriptions/' . $subscription_id, array( 'enabled' => $enabled ), 'PUT' );
 		}
 
+		/**
+		 * delete_subscription function.
+		 *
+		 * @access public
+		 * @param mixed $app_id
+		 * @param mixed $subscription_id
+		 * @return void
+		 */
 		function delete_subscription( $app_id, $subscription_id ){
 			return $this->run( 'webhooks/v1/' . $app_id . '/subscriptions/' . $subscription_id );
 		}
 
+		/**
+		 * get_webhook_settings function.
+		 *
+		 * @access public
+		 * @param mixed $app_id
+		 * @return void
+		 */
 		function get_webhook_settings( $app_id ){
 			return $this->run( 'webhooks/v1/' . $app_id . '/settings' );
 		}
 
+		/**
+		 * update_settings function.
+		 *
+		 * @access public
+		 * @param mixed $app_id
+		 * @param mixed $webhookUrl
+		 * @param mixed $maxConcurrentRequests
+		 * @return void
+		 */
 		function update_settings( $app_id, $webhookUrl, $maxConcurrentRequests ){
 			$args = array(
 				'webhookUrl' => $webhookUrl,
 				'maxConcurrentRequests' => $maxConcurrentRequests
 			);
 			return $this->run( 'webhooks/v1/' . $app_id . '/settings', $args, 'PUT' );
+		}
+
+
+		/* Associations. */
+
+		/**
+		 * get_associations_for_crm_object function.
+		 * @docs https://developers.hubspot.com/docs/methods/crm-associations/get-associations
+		 *
+		 * @access public
+		 * @param mixed $object_id
+		 * @param mixed $definition_id
+		 * @param string $limit (default: '')
+		 * @param string $offset (default: '')
+		 * @return void
+		 */
+		function get_associations_for_crm_object( $object_id, $definition_id, $limit = '', $offset = '' ) {
+			return $this->run( 'crm-associations/v1/associations/'. $object_id .'/HUBSPOT_DEFINED/' . $definition_id );
 		}
 
 	}
