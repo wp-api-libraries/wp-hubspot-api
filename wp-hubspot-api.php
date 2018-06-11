@@ -110,12 +110,12 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 				$this->route = add_query_arg( 'hapikey', static::$api_key, $this->route );
 			}
 
+			// Hubspot api is jank and doesnt use proper URL encode standards... So we must jank it up.
+			$this->route = preg_replace( '/\%5B\d+\%5D/', '', $this->route );
+
 			// Generate query string for GET requests.
 			if ( 'GET' === $method ) {
 				$this->route = add_query_arg( array_filter( $args ), $this->route );
-
-				// Hubspot api is jank and doesnt use proper URL encode standards... So we must jank it up.
-				$this->route = preg_replace( '/\%5B\d+\%5D/', '', $this->route );
 			} elseif ( 'application/json' === $this->args['headers']['Content-Type'] ) {
 				$this->args['body'] = wp_json_encode( $args );
 			} else {
@@ -1422,6 +1422,8 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 				$ticket_ids = explode( ',', $ticket_ids );
 			}
 
+			$url = 'crm-objects/v1/objects/tickets/batch-read?includeDeletes=' . ($deleted ? 'true' : 'false');
+
 			$args = array(
 				'ids' => $ticket_ids,
 				// 'includeDeletes' => $deleted
@@ -1429,9 +1431,10 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 
 			if( ! empty( $properties ) ){
 				$args['properties'] = $properties;
+				$url = add_query_arg( array('properties' => $properties), $url );
 			}
 
-			return $this->run( 'crm-objects/v1/objects/tickets/batch-read?includeDeletes=' . ($deleted ? 'true' : 'false'), $args, 'POST' ); // Note: is actually a get.
+			return $this->run( $url, $args, 'POST' ); // Note: is actually a get.
 		}
 
 		/**
