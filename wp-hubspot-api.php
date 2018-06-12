@@ -181,8 +181,9 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 */
 		public function set_props( $count = 20, $offset = null, $properties = null, $alt_args = array() ){
 			$args = array(
-				'count' => intval( $count ),
-				'offset' => $offset,
+				'count'    => intval( $count ),
+				'limit'    => intval( $count ),
+				'offset'   => $offset,
 				'property' => $properties
 			);
 
@@ -1772,7 +1773,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @param string $offset (default: '')
 		 * @return void
 		 */
-		function get_associations_for_crm_object( $object_id, $definition_id, $limit = '', $offset = '' ) {
+		function get_associations_for_crm_object( $object_id, $definition_id ) {
 			return $this->run( 'crm-associations/v1/associations/'. $object_id .'/HUBSPOT_DEFINED/' . $definition_id );
 		}
 
