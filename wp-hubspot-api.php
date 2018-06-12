@@ -1168,6 +1168,28 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			return $this->run( "engagements/v1/engagements/associated/$object_type/$object_id/paged" );
 		}
 
+		/**
+		 * Create an engagement.
+		 *
+		 * For the sake of verbosity, $type is potentially included twice.
+		 * @param  string $type       [description]
+		 * @param  [type] $engagement [description]
+		 * @param  array  $metadata   [description]
+		 * @return [type]             [description]
+		 */
+		function create_engagement( string $type, $engagement = array(), $metadata = array(), $associations = array(), $attachments = array() ){
+			$engagement['type'] = $engagement['type'] ?? $type;
+
+			$args = array(
+				'engagement'   => $engagement,
+				'associations' => $associations,
+				'metadata'     => $metadata,
+				'attachments'  => $attachments
+			);
+
+			return $this->run( 'engagements/v1/engagements', $args, 'POST' );
+		}
+
 		/* Keywords. */
 
 
