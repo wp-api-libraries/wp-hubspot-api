@@ -1799,6 +1799,33 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			return $this->run( 'crm-associations/v1/associations/'. $object_id .'/HUBSPOT_DEFINED/' . $definition_id );
 		}
 
+		/**
+		 * Create an association between two users.
+		 *
+		 * Contact to ticket		15
+		 * Ticket to contact		16
+		 * Ticket to engagement	17
+		 * Engagement to ticket	18
+		 * Deal to line item		19
+		 * Line item to deal		20
+		 * Company to ticket		25
+		 * Ticket to company		26
+		 *
+		 * @param  [type] $from_id    [description]
+		 * @param  [type] $to_id      [description]
+		 * @param  [type] $definition [description]
+		 * @param  string $category   [description]
+		 * @return [type]             [description]
+		 */
+		function create_association( $from_id, $to_id, $definition, $category = "HUBSPOT_DEFINED" ){
+			return $this->run( 'crm-associations/v1/associations', array(
+				'fromObjectId' => $from_id,
+				'toObjectId' => $to_id,
+				'definitionId' => intval( $definition ),
+				'category' => $category
+			), 'PUT' );
+		}
+
 	}
 
 }
