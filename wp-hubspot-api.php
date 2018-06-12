@@ -1467,7 +1467,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 					'value' => $source_type
 				),
 				array(
-					'name'  => 'status',
+					'name'  => 'hs_pipeline_stage',
 					'value' => $status
 				),
 				array(
