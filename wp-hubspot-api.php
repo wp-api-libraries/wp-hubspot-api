@@ -1460,7 +1460,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return object              The created ticket?
 		 */
 		function create_ticket( $contact_id, string $status, string $source_type = 'EMAIL', array $properties = array() ){
-			$properties = array_merge( $properties, array(
+			$properties = array_merge( array(
 				array(
 					'name'  => 'source_type',
 					'value' => $source_type
@@ -1473,7 +1473,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 					'name'  => 'created_by',
 					'value' => $contact_id
 				)
-			));
+			), $properties );
 
 			return $this->run( 'crm-objects/v1/objects/tickets', $properties, 'POST' );
 		}
