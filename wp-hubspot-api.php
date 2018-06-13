@@ -113,14 +113,14 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			// Generate query string for GET requests.
 			if ( 'GET' === $method ) {
 				$this->route = add_query_arg( array_filter( $args ), $this->route );
-
-				// Hubspot api is jank and doesnt use proper URL encode standards... So we must jank it up.
-				$this->route = preg_replace( '/\%5B\d+\%5D/', '', $this->route );
 			} elseif ( 'application/json' === $this->args['headers']['Content-Type'] ) {
 				$this->args['body'] = wp_json_encode( $args );
 			} else {
 				$this->args['body'] = $args;
 			}
+
+			// Hubspot api is jank and doesnt use proper URL encode standards... So we must jank it up.
+			$this->route = preg_replace( '/\%5B\d+\%5D/', '', $this->route );
 
 			return $this;
 		}
