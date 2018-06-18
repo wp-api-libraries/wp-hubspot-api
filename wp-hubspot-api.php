@@ -126,7 +126,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		}
 
 		/**
-		 * run function.
+		 * Run function.
 		 *
 		 * @access private
 		 * @param mixed  $route
