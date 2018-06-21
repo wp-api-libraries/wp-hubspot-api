@@ -1040,7 +1040,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		public function delete_contact_list( $list_id ){
-			return $this->run( "/contacts/v1/lists/$list_id", array(), 'DELETE' );
+			return $this->run( "contacts/v1/lists/$list_id", array(), 'DELETE' );
 		}
 
 
@@ -1055,33 +1055,81 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			$args = array(
 				'listId' => $list_ids
 			);
-			return $this->run( "/contacts/v1/lists/$list_id", $args );
+			return $this->run( "contacts/v1/lists/$list_id", $args );
 		}
 
-		public function get_static_contact_lists(){
-
-		}
-
-		public function get_dynamic_contact_lists(){
-		}
-
-		public function get_contacts_in_list(){
+		public function get_static_contact_lists( $count = null, $offset = null ){
+			$args = $this->filter_args(array('count' => $count, 'offset' => $offset));
+			return $this->run( "contacts/v1/lists/static", $args );
 
 		}
 
-		public function get_recent_contacts_in_list(){
+		public function get_dynamic_contact_lists($count = null, $offset = null){
+			$args = $this->filter_args(array('count' => $count, 'offset' => $offset));
+			return $this->run( "contacts/v1/lists/dynamic", $args );
+		}
+
+		public function get_contacts_in_list( $list_id, $opt_args ){
+			return $this->run( "contacts/v1/lists/$list_id/contacts/all", $opt_args );
+		}
+
+		public function get_recent_contacts_in_list($list_id, $opt_args){
+			return $this->run( "contacts/v1/lists/$list_id/contacts/recent", $opt_args );
 
 		}
 
-		public function add_contact_to_list(){
-
+		public function add_contact_to_list($list_id, $contact_json ){
+			return $this->run( "contacts/v1/lists/$list_id/add", $contact_json, 'POST' );
 		}
 
 		public function delete_contact_from_list(){
-
+			return $this->run( "contacts/v1/lists/$list_id/remove", array(), 'DELETE' );
 		}
 
-		/* Content Properties. */
+		/* Contact Properties. */
+
+		public function get_all_contact_properties(){
+			return $this->run( "properties/v1/contacts/properties" );
+		}
+
+		public function get_a_contact_property($property_name){
+			return $this->run( "properties/v1/contacts/properties/named/$property_name" );
+		}
+
+		public function create_a_contact_property( $contact_property_json ){
+			return $this->run( "properties/v1/contacts/properties", $contact_property_json, 'POST' );
+		}
+
+		public function update_a_contact_property( $property_name, $contact_property_json ){
+			return $this->run( "properties/v1/contacts/properties/named/$property_name", $contact_property_json, 'PUT' );
+		}
+
+		public function delete_a_contact_property( $property_name, $contact_property_json ){
+			return $this->run( "properties/v1/contacts/properties/named/$property_name", array(), 'DELETE' );
+		}
+
+		public function get_contact_property_groups( $include_properties =  null){
+			$args = $this->filter_args( array( 'includeProperties' => $include_properties ));
+			return $this->run( "properties/v1/contacts/groups", $args );
+		}
+
+		public function get_contact_property_group_details($group_name, $include_properties =  null){
+			$args = $this->filter_args( array( 'includeProperties' => $include_properties ));
+			return $this->run( "properties/v1/contacts/groups/named/$group_name", $args );
+		}
+
+		public function create_contact_property_group($group_name, $display_name, $display_order = null ){
+			$args = $this->filter_args( array( 'name' => $group_name, 'displayName' => $display_name, 'displayOrder' => $display_order ));
+			return $this->run( "properties/v1/contacts/groups", $args, 'POST' );
+		}
+
+		public function update_contact_property_group($group_name, $group_json ){
+			return $this->run( "properties/v1/contacts/groups/named/$group_name", $group_json, 'PUT' );
+		}
+
+		public function delete_contact_property_group($group_name, $group_json ){
+			return $this->run( "properties/v1/contacts/groups/named/$group_name", array(), 'DELETE' );
+		}
 
 		/* Email Events. */
 
@@ -1098,8 +1146,6 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		function event( $event_id, $contact_email = null, $contact_revenue = null, $any_contact_property = null ) {
 
 		}
-
-		/* TODO: move */
 
 		/**
 		 * list_all_file_metadata function.
@@ -1137,38 +1183,6 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		/* Engagements. */
 
 		/**
-		 * list_engagements function.
-		 *
-		 * @access public
-		 * @param mixed $offset (default: null)
-		 * @param int $limit (default: 100)
-		 * @return void
-		 */
-		function list_engagements( $offset = null, $limit = 100 ){
-			$args = array(
-				'limit' => $limit
-			);
-
-			if( $offset ){
-				$args['offset'] = $offset;
-			}
-
-			return $this->run( 'engagements/v1/engagements/paged', $args );
-		}
-
-		/**
-		 * list_associated_engagements function.
-		 *
-		 * @access public
-		 * @param mixed $object_type
-		 * @param mixed $object_id
-		 * @return void
-		 */
-		function list_associated_engagements( $object_type, $object_id ){
-			return $this->run( "engagements/v1/engagements/associated/$object_type/$object_id/paged" );
-		}
-
-		/**
 		 * Create an engagement.
 		 *
 		 * For the sake of verbosity, $type is potentially included twice.
@@ -1190,6 +1204,78 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			return $this->run( 'engagements/v1/engagements', $args, 'POST' );
 		}
 
+		/**
+		 * [update_engagement description]
+		 *
+		 * @see https://developers.hubspot.com/docs/methods/engagements/update_engagement-patch Documentation
+		 * @param  [type] $engagement_id [description]
+		 * @param  [type] $args          [description]
+		 * @return [type]                [description]
+		 */
+		function update_engagement( $engagement_id, $args ){
+			return $this->run( "engagements/v1/engagements/$engagement_id", $args, 'PATCH' );
+		}
+
+		/**
+		 * [get_engagement description]
+		 *
+		 * @see https://developers.hubspot.com/docs/methods/engagements/get_engagement Documentation
+		 * @param  [type] $engagement_id [description]
+		 * @return [type]                [description]
+		 */
+		function get_engagement( $engagement_id ){
+			return $this->run( "engagements/v1/engagements/$engagement_id" );
+		}
+
+
+		/**
+		 * list_engagements function.
+		 *
+		 * @access public
+		 * @param mixed $offset (default: null)
+		 * @param int $limit (default: 100)
+		 * @return void
+		 */
+		function list_engagements( $offset = null, $limit = 100 ){
+			$args = array(
+				'limit' => $limit
+			);
+
+			if( $offset ){
+				$args['offset'] = $offset;
+			}
+
+			return $this->run( 'engagements/v1/engagements/paged', $args );
+		}
+
+		function get_recent_engagements( $args ){
+			return $this->run( "engagements/v1/engagements/recent/modified", $args );
+		}
+
+		function delete_engagement( $args ){
+			return $this->run( "engagements/v1/engagements/recent/modified", $args );
+		}
+
+		function associate_engagement($engagement_id, $object_type, $object_id ){
+			return $this->run( "engagements/v1/engagements/$engagement_id/associations/$object_type/$object_id", array(), 'PUT' );
+		}
+
+		/**
+		 * list_associated_engagements function.
+		 *
+		 * @access public
+		 * @param mixed $object_type
+		 * @param mixed $object_id
+		 * @return void
+		 */
+		function list_associated_engagements( $object_type, $object_id ){
+			return $this->run( "engagements/v1/engagements/associated/$object_type/$object_id/paged" );
+		}
+
+		function get_engagement_dispositions(){
+			return $this->run( "calling/v1/dispositions" );
+		}
+
 		/* Keywords. */
 
 
@@ -1201,6 +1287,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function get_keyword_list( $search ) {
+			error_log('HubSpotAPI->get_keyword_list() Method Deprecated: HubSpot Keyword API will be removed August 1, 2018');
 			$request = 'keywords/v1/keywords';
 			return $this->run( $request );
 		}
@@ -1213,11 +1300,13 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function get_keyword( $keyword_guid ) {
+			error_log('HubSpotAPI->get_keyword() Method Deprecated: HubSpot Keyword API will be removed August 1, 2018');
 			return $this->run( 'keywords/v1/keywords/' . $keyword_guid );
 		}
 
 		function add_keyword() {
-
+			error_log('HubSpotAPI->add_keyword() Method Deprecated: HubSpot Keyword API will be removed August 1, 2018');
+			return $this->run('/keywords/v1/keywords');
 		}
 
 		/**
@@ -1228,13 +1317,15 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function delete_keyword( $keyword_guid ) {
+			error_log('HubSpotAPI->delete_keyword() Method Deprecated: HubSpot Keyword API will be removed August 1, 2018');
 			return $this->run( 'keywords/v1/keywords/' . $keyword_guid );
 		}
 
 		/* Owners. */
 
-		function get_owners() {
-
+		function get_owners( $email = null, $include_inactive = null ) {
+			$args = $this->filter_args( array('email' => $email, 'includeInactive' => $include_inactive ) );
+			return $this->run( 'keywords/v1/keywords/' . $keyword_guid );
 		}
 
 		/* Deals. */
@@ -1248,7 +1339,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function add_deal( $deal_json ) {
-
+			return $this->run( "deals/v1/deal/", $deal_json, 'POST' );
 		}
 
 		/**
@@ -1260,11 +1351,11 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function update_deal( $deal_id, $deal_json ) {
-
+			return $this->run( "deals/v1/deal/$deal_id", $deal_json, 'PUT' );
 		}
 
-		function get_deal() {
-			// 'https://api.hubapi.com/deals/v1/deal/3865198'
+		function update_deal_batch( $deal_json ){
+			return $this->run( "deals/v1/batch-async/update", $deal_json, 'POST' );
 		}
 
 		/**
@@ -1279,32 +1370,48 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @param mixed $associations Associations.
 		 * @return void
 		 */
-		function get_all_deals( $limit = null, $offset = null, $properties = null, $properties_with_history = null, $associations ) {
-			return $this->run( 'deals/v1/deal/paged' );
+		function get_all_deals( $limit = null, $offset = null, $properties = null, $properties_with_history = null, $include_associations = null ){
+			$args = array('limit' => $limit, 'offset' => $offset, 'properties' => $properties, 'propertiesWithHistory' => $properties_with_history, 'includeAssociations' => $include_associations );
+			return $this->run( 'deals/v1/deal/paged', $args );
 		}
 
-		function get_recently_modified_deals() {
-			// https://api.hubapi.com/deals/v1/deal/recent/modified?hapikey=demo
+		function get_recently_modified_deals( $limit = null, $offset = null, $since = null, $properties_with_versions = null ) {
+			$args = array('count' => $limit, 'offset' => $offset, 'since' => $since, 'includePropertyVersions' => $properties_with_versions );
+			return $this->run( 'deals/v1/deal/recent/modified', $args );
 		}
 
-		function get_recent_created_deals() {
-			// https://api.hubapi.com/deals/v1/deal/recent/created?hapikey=demo'
+		function get_recent_created_deals($limit = null, $offset = null, $since = null, $properties_with_versions = null) {
+			$args = array('count' => $limit, 'offset' => $offset, 'since' => $since, 'includePropertyVersions' => $properties_with_versions );
+			return $this->run( 'deals/v1/deal/recent/created', $args );
 		}
 
-		function delete_deal() {
-			// Example URL: 'https://api.hubapi.com/deals/v1/deal/10444744?hapikey=demo'
+		function delete_deal( $deal_id ) {
+			return $this->run( "deals/v1/deal/$deal_id", array(), 'DELETE' );
 		}
 
-		function associate_deal() {
-			// 'https://api.hubapi.com/deals/v1/deal/1126609/associations/CONTACT?id=394455&hapikey=demo'
+		function get_deal( $deal_id, $properties_with_versions = null) {
+			return $this->run( "deals/v1/deal/$deal_id", array('includePropertyVersions' => $properties_with_versions ) );
 		}
 
-		function delete_deal_association() {
-			// 'https://api.hubapi.com/deals/v1/deal/1126609/associations/CONTACT?id=394455&hapikey=demo'
+		function associate_deal($deal_id, $object_type, $ids ) {
+			$args = array( 'id' => $ids );
+			$url = "deals/v1/deal/$deal_id/associations/$object_type";
+			$url = add_query_arg( 'id', $ids, $url );
+
+			return $this->run( $url, $args, 'PUT' );
 		}
 
-		function get_associated_deals() {
-			// https://api.hubapi.com/deals/v1/deal/associated/contact/1002325/paged?hapikey=demo&includeAssociations=true&limit=10&properties=dealname
+		function delete_deal_association($deal_id, $object_type, $ids ) {
+			$args = array( 'id' => $ids );
+			$url = "deals/v1/deal/$deal_id/associations/$object_type";
+			$url = add_query_arg( 'id', $ids, $url );
+
+			return $this->run( $url, $args, 'DELETE' );
+		}
+
+		function get_associated_deals($object_type, $object_id, $limit = null, $offset = null, $properties = null, $properties_with_history = null, $include_associations = null) {
+			$args = array('limit' => $limit, 'offset' => $offset, 'properties' => $properties, 'propertiesWithHistory' => $properties_with_history, 'includeAssociations' => $include_associations );
+			return $this->run( "deals/v1/deal/associated/$object_type/$object_id/paged", $args );
 		}
 
 		/* Deal Pipelines. */
@@ -1330,58 +1437,62 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			return $this->run( 'deals/v1/pipelines' );
 		}
 
-		function create_deal_pipeline() {
-
+		function create_deal_pipeline( $label, $display_order, $stages ) {
+			$args = array( 'label' => $label, 'displayOrder' => $display_order, 'stages' => $stages );
+			return $this->run( 'deals/v1/pipelines', $args, 'POST' );
 		}
 
-		function update_deal_pipeline() {
-
+		function update_deal_pipeline( $pipeline_id, $label, $display_order, $stages ) {
+			$args = array( 'pipelineId' => $pipeline_id, 'label' => $label, 'displayOrder' => $display_order, 'stages' => $stages );
+			return $this->run( "deals/v1/pipelines/$pipeline_id", $args, 'POST' );
 		}
 
-		function delete_deal_pipeline() {
-
+		function delete_deal_pipeline( $pipeline_id ) {
+			return $this->run( "deals/v1/pipelines/$pipeline_id", $args, 'DELETE' );
 		}
 
 		/* Deal Properties. */
 
-		function add_deal_property() {
-
+		function add_deal_property( $property_json ) {
+			return $this->run( "properties/v1/deals/properties/", $property_json, 'POST' );
 		}
 
-		function update_deal_property() {
-
+		function update_deal_property( $property_name, $property_json ) {
+			return $this->run( "properties/v1/deals/properties/named/$property_name", $property_json, 'PUT' );
 		}
 
-		function delete_deal_property() {
-
+		function delete_deal_property( $property_name ) {
+			return $this->run( "properties/v1/deals/properties/named/$property_name", array(), 'DELETE' );
 		}
 
 		function get_all_deal_properties() {
-
+			return $this->run( "properties/v1/deals/properties/"  );
 		}
 
 		function get_deal_property() {
-
+			return $this->run( "properties/v1/deals/properties/named/$property_name" );
 		}
 
-		function add_deal_property_group() {
-
+		function add_deal_property_group( $property_group_json ) {
+			return $this->run( "properties/v1/deals/groups/", $property_group_json, 'POST' );
 		}
 
-		function update_deal_property_group() {
-
+		function update_deal_property_group( $group_name ) {
+			return $this->run( "properties/v1/deals/groups/named/$group_name", $property_group_json, 'PUT' );
 		}
 
-		function delete_deal_property_group() {
-
+		function delete_deal_property_group($group_name) {
+			return $this->run( "properties/v1/deals/groups/named/$group_name", array(), 'DELETE' );
 		}
 
-		function get_deal_property_groups() {
-
+		function get_deal_property_groups( $include_properties = null ) {
+			$args = array( 'includeProperties' => $include_properties );
+			return $this->run( "properties/v1/deals/groups", $args);
 		}
 
-		function get_deal_property_group() {
-
+		function get_deal_property_group( $property_group, $include_properties) {
+			$args = array( 'includeProperties' => $include_properties );
+			return $this->run( "properties/v1/deals/groups/named/$property_group", $args);
 		}
 
 		/* Tickets. */
@@ -1918,6 +2029,55 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			), 'PUT' );
 		}
 
+	}
+
+	function get_all_products( $offset = null, $properties = null ){
+		return $this->run( "crm-objects/v1/objects/products/paged", array('offset' => $offset, 'properties' => $properties ) );
+	}
+
+	function get_product_by_id( $product_id, $properties = null, bool $include_deleted = null){
+		return $this->run( "crm-objects/v1/objects/products/$product_id", array('includeDeletes' => $include_deleted, 'properties' => $properties ) );
+	}
+
+	function get_batch_products_by_id( $ids, $properties = null, bool $include_deleted = null ){
+		return $this->run( "crm-objects/v1/objects/products/batch-read", array('ids' => $ids, 'properties' => $properties,'includeDeletes' => $include_deleted ) );
+	}
+
+	function create_product( $product_json){
+		return $this->run( "crm-objects/v1/objects/products", $product_json, 'POST' );
+	}
+
+	function create_product_batch( $product_json){
+		return $this->run( "crm-objects/v1/objects/products/batch-create", $product_json, 'POST' );
+	}
+
+	function update_product( $product_id, $product_json){
+		return $this->run( "crm-objects/v1/objects/products/$product_id", $product_json, 'POST' );
+	}
+
+	function update_product_batch( $product_json){
+		return $this->run( "crm-objects/v1/objects/products/batch-update", $product_json, 'POST' );
+	}
+
+	function delete_product( $product_id ){
+		return $this->run( "crm-objects/v1/objects/products/$product_id", array(), 'DELETE' );
+	}
+	function delete_product_batch( $ids ){
+		return $this->run( "crm-objects/v1/objects/products/batch-delete", array('ids' => $ids ), 'POST' );
+	}
+
+	function get_changed_product_log($args){
+		return $this->run( "crm-objects/v1/change-log/products", $args );
+	}
+
+	function get_broken_down_analytics( $breakdown_by, $time_period, $starte_date, $end_date, $opt_args = array() ){
+		$args = $this->filter_args( $opt_args, array('start' => $starte_date, 'end' => $end_date));
+		return $this->run( "analytics/v2/reports/$breakdown_by/$time_period", $args );
+	}
+
+	function get_specific_object_analytics( $object_type, $time_period, $starte_date, $end_date, $opt_args = array() ){
+		$args = $this->filter_args( $opt_args, array('start' => $starte_date, 'end' => $end_date));
+		return $this->run( "analytics/v2/reports/$object_type/$time_period", $args );
 	}
 
 }
