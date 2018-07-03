@@ -554,7 +554,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return void
 		 */
 		function add_contact_to_company( $company_id, $contact_vid ) {
-			return $this->run( "engagements/v1/engagements/$company_id/associations/contact/$contact_vid" );
+			return $this->run( "companies/v2/companies/$company_id/contacts/$contact_vid", array(), 'PUT' );
 		}
 
 		/**
