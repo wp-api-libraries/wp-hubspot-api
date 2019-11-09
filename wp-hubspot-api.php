@@ -1781,6 +1781,11 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 
 		/* Timeline. */
 
+		/**
+		 * [add_or_update_timeline_event description]
+		 * @param [type] $app_id [description]
+		 * @param [type] $args   [description]
+		 */
 		function add_or_update_timeline_event( $app_id, $args ) {
 			return $this->run( "integrations/v1/$app_id/timeline/event", $args, 'PUT' );
 		}
@@ -1952,6 +1957,10 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			return $this->run( $request );
 		}
 
+		/**
+		 * [reset_smtp_api_token description]
+		 * @param [type] $user_name [description]
+		 */
 		function reset_smtp_api_token( $user_name ) {
 
 		}
@@ -2096,7 +2105,12 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		}
 
 	}
-
+	/**
+	 * [get_all_products description]
+	 * @param  [type] $offset     [description]
+	 * @param  [type] $properties [description]
+	 * @return [type]             [description]
+	 */
 	function get_all_products( $offset = null, $properties = null ) {
 		return $this->run(
 			'crm-objects/v1/objects/products/paged',
@@ -2106,7 +2120,13 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			)
 		);
 	}
-
+	/**
+	 * [get_product_by_id description]
+	 * @param  [type] $product_id      [description]
+	 * @param  [type] $properties      [description]
+	 * @param  [type] $include_deleted [description]
+	 * @return [type]                  [description]
+	 */
 	function get_product_by_id( $product_id, $properties = null, bool $include_deleted = null ) {
 		return $this->run(
 			"crm-objects/v1/objects/products/$product_id",
@@ -2116,7 +2136,13 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			)
 		);
 	}
-
+	/**
+	 * [get_batch_products_by_id description]
+	 * @param  [type] $ids             [description]
+	 * @param  [type] $properties      [description]
+	 * @param  [type] $include_deleted [description]
+	 * @return [type]                  [description]
+	 */
 	function get_batch_products_by_id( $ids, $properties = null, bool $include_deleted = null ) {
 		return $this->run(
 			'crm-objects/v1/objects/products/batch-read',
@@ -2127,34 +2153,72 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 			)
 		);
 	}
-
+	/**
+	 * [create_product description]
+	 * @param  [type] $product_json [description]
+	 * @return [type]               [description]
+	 */
 	function create_product( $product_json ) {
 		return $this->run( 'crm-objects/v1/objects/products', $product_json, 'POST' );
 	}
-
+	/**
+	 * [create_product_batch description]
+	 * @param  [type] $product_json [description]
+	 * @return [type]               [description]
+	 */
 	function create_product_batch( $product_json ) {
 		return $this->run( 'crm-objects/v1/objects/products/batch-create', $product_json, 'POST' );
 	}
-
+	/**
+	 * [update_product description]
+	 * @param  [type] $product_id   [description]
+	 * @param  [type] $product_json [description]
+	 * @return [type]               [description]
+	 */
 	function update_product( $product_id, $product_json ) {
 		return $this->run( "crm-objects/v1/objects/products/$product_id", $product_json, 'POST' );
 	}
-
+	/**
+	 * [update_product_batch description]
+	 * @param  [type] $product_json [description]
+	 * @return [type]               [description]
+	 */
 	function update_product_batch( $product_json ) {
 		return $this->run( 'crm-objects/v1/objects/products/batch-update', $product_json, 'POST' );
 	}
-
+	/**
+	 * [delete_product description]
+	 * @param  [type] $product_id [description]
+	 * @return [type]             [description]
+	 */
 	function delete_product( $product_id ) {
 		return $this->run( "crm-objects/v1/objects/products/$product_id", array(), 'DELETE' );
 	}
+	/**
+	 * [delete_product_batch description]
+	 * @param  [type] $ids [description]
+	 * @return [type]      [description]
+	 */
 	function delete_product_batch( $ids ) {
 		return $this->run( 'crm-objects/v1/objects/products/batch-delete', array( 'ids' => $ids ), 'POST' );
 	}
-
+	/**
+	 * [get_changed_product_log description]
+	 * @param  [type] $args [description]
+	 * @return [type]       [description]
+	 */
 	function get_changed_product_log( $args ) {
 		return $this->run( 'crm-objects/v1/change-log/products', $args );
 	}
-
+	/**
+	 * [get_broken_down_analytics description]
+	 * @param  [type] $breakdown_by [description]
+	 * @param  [type] $time_period  [description]
+	 * @param  [type] $starte_date  [description]
+	 * @param  [type] $end_date     [description]
+	 * @param  array  $opt_args     [description]
+	 * @return [type]               [description]
+	 */
 	function get_broken_down_analytics( $breakdown_by, $time_period, $starte_date, $end_date, $opt_args = array() ) {
 		$args = $this->filter_args(
 			$opt_args,
@@ -2165,7 +2229,15 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		);
 		return $this->run( "analytics/v2/reports/$breakdown_by/$time_period", $args );
 	}
-
+	/**
+	 * [get_specific_object_analytics description]
+	 * @param  [type] $object_type [description]
+	 * @param  [type] $time_period [description]
+	 * @param  [type] $starte_date [description]
+	 * @param  [type] $end_date    [description]
+	 * @param  array  $opt_args    [description]
+	 * @return [type]              [description]
+	 */
 	function get_specific_object_analytics( $object_type, $time_period, $starte_date, $end_date, $opt_args = array() ) {
 		$args = $this->filter_args(
 			$opt_args,
