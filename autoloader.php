@@ -23,8 +23,12 @@ if ( ! function_exists( 'wp_hubspot_api_autoload' ) ) {
 	 * @param string $class_name The fully-qualified name of the class to load.
 	 */
 	function wp_hubspot_api_autoload( $class_name ) {
-		if ( ! empty( $class_name ) & file_exists( 'src/' . $class_name . '.class.php' ) ) {
-			include 'src/' . $class_name . '.class.php';
+		if ( false === strpos( $class_name, 'WP_Hubspot_API' ) ) {
+
+			$file = 'src/class-' . strtolower( str_replace('_', '-', $class_name ) ) . '.php';
+			if( file_exists( $file ) ) {
+				include_once $file;
+			}
 		}
 	}
 }

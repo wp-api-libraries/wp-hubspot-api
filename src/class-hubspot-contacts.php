@@ -5,7 +5,9 @@
  * @package WP-API-Libraries\WP-HubSpot-API
  */
 
+namespace WP_Hubspot_API;
 
+use WP_Hubspot_API;
 
 /* Exit if accessed directly. */
 defined( 'ABSPATH' ) || exit;

@@ -17,12 +17,12 @@
 * Text Domain: wp-hubspot-api
 */
 
-
-
 /* Exit if accessed directly. */
 defined( 'ABSPATH' ) || exit;
 
-// require_once trailingslashit( dirname( __FILE__ ) ) . 'autoloader.php';
+use WP_Hubspot_API;
+
+require_once trailingslashit( dirname( __FILE__ ) ) . 'autoloader.php';
 
 if ( ! class_exists( 'HubSpotAPI' ) ) {
 
@@ -95,6 +95,7 @@ if ( ! class_exists( 'HubSpotAPI' ) ) {
 		 * @return self            Returns an instance of itself so it can be chained to the fetch method.
 		 */
 		protected function build_request( $route, $args = array(), $method = 'GET' ) {
+
 			// Start building query.
 			$this->set_headers();
 
